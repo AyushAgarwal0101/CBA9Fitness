@@ -1246,7 +1246,7 @@ button, input, textarea, select {
    ========================================================================== */
 .transformations-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 2rem;
   padding-bottom: 3.5rem;
 }
@@ -1266,6 +1266,41 @@ button, input, textarea, select {
   transform: translateY(-5px);
   border-color: var(--border-active);
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), var(--shadow-glow);
+}
+
+/* Clean Image-Only Transformation Cards */
+.trans-card-clean {
+  padding: 0;
+  overflow: hidden;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.trans-card-clean:hover {
+  transform: translateY(-6px);
+  border-color: var(--border-active);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7), var(--shadow-glow);
+}
+
+.trans-full-img {
+  width: 100%;
+  height: 100%;
+  max-height: 480px;
+  object-fit: contain;
+  display: block;
+  border-radius: var(--radius-lg);
+  transition: transform 0.4s ease;
+  background-color: #0b1320;
+}
+
+.trans-card-clean:hover .trans-full-img {
+  transform: scale(1.02);
 }
 
 .trans-images-split {
