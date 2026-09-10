@@ -96,6 +96,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         card.setAttribute('data-desc', plan.description);
         card.setAttribute('data-features', featuresAttr);
 
+        const priceParts = (plan.price || '').split('•');
+        const priceHtml = priceParts.length > 1
+          ? `<div class="plan-pricing">
+               <span class="pricing-amount" style="font-size: 1.15rem;">${priceParts[0].trim()}</span>
+               <span class="pricing-sub" style="color: #94A3B8; font-weight: 500;">${priceParts[1].trim()}</span>
+             </div>`
+          : `<div class="plan-pricing"><span class="pricing-amount" style="font-size: 1.15rem;">${plan.price}</span></div>`;
+
         card.innerHTML = `
           ${badgeHtml}
           <div class="plan-header">
@@ -119,8 +127,8 @@ document.addEventListener('DOMContentLoaded', async () => {
           </div>
           <p class="plan-desc">${plan.description}</p>
           <div class="plan-footer">
-            <div class="plan-price">${plan.price}<span>/ program</span></div>
-            <button class="btn btn-outline view-plan-trigger" style="padding: 0.6rem 1.1rem; font-size: 0.88rem;">View Plan</button>
+            ${priceHtml}
+            <button class="btn btn-primary view-plan-trigger" style="padding: 0.6rem 1.1rem; font-size: 0.85rem;">View Plan</button>
           </div>
         `;
         plansContainer.appendChild(card);
@@ -134,11 +142,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   function normalizeCategory(cat) {
     if (!cat) return 'all';
     const c = cat.toLowerCase();
-    if (c.includes('fat') || c.includes('shred')) return 'fatloss';
-    if (c.includes('muscle') || c.includes('hypertrophy')) return 'hypertrophy';
-    if (c.includes('strength') || c.includes('power')) return 'strength';
-    if (c.includes('begin')) return 'beginner';
-    if (c.includes('athletic') || c.includes('perform') || c.includes('hybrid')) return 'athletic';
+    if (c.includes('month') && !c.includes('3') && !c.includes('6') && !c.includes('12')) return 'monthly';
+    if (c.includes('3') || c.includes('quarter')) return '3months';
+    if (c.includes('6')) return '6months';
+    if (c.includes('year') || c.includes('12')) return 'yearly';
+    if (c.includes('smart')) return 'smart';
     return c;
   }
 
