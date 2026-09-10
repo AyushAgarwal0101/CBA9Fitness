@@ -831,14 +831,76 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // ==========================================================================
-  // 10. Form Submission Handlers & Supabase Recording
+  // 10. Form Security, Input Sanitization & Supabase Recording
   // ==========================================================================
+  const formSubmissionsTracker = new Map();
+
+  function sanitizeInput(text, maxLength = 255) {
+    if (typeof text !== 'string') return '';
+    const clean = text
+      .replace(/<[^>]*>?/gm, '')
+      .replace(/[<>"'&]/g, (char) => {
+        switch (char) {
+          case '<': return '&lt;';
+          case '>': return '&gt;';
+          case '&': return '&amp;';
+          case '"': return '&quot;';
+          case "'": return '&#x27;';
+          default: return char;
+        }
+      })
+      .trim();
+    return clean.substring(0, maxLength);
+  }
+
+  function isValidEmail(email) {
+    if (!email || typeof email !== 'string') return false;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email.trim()) && email.trim().length <= 254;
+  }
+
+  function isValidPhone(phone) {
+    if (!phone || typeof phone !== 'string' || !phone.trim()) return true; // Optional field
+    const phoneRegex = /^[+]?[(]?[0-9]{1,4}[)]?[-\s./0-9]{6,16}$/;
+    return phoneRegex.test(phone.trim()) && phone.trim().length <= 30;
+  }
+
+  function checkFormRateLimit(formId, maxAttempts = 5, windowMs = 5 * 60 * 1000) {
+    const now = Date.now();
+    const entry = formSubmissionsTracker.get(formId) || { count: 0, resetTime: now + windowMs, lastSubmit: 0 };
+
+    if (now - entry.lastSubmit < 2500) {
+      showToast('Please wait a moment before submitting again.');
+      return false;
+    }
+
+    if (now > entry.resetTime) {
+      entry.count = 1;
+      entry.resetTime = now + windowMs;
+      entry.lastSubmit = now;
+      formSubmissionsTracker.set(formId, entry);
+      return true;
+    }
+
+    if (entry.count >= maxAttempts) {
+      const waitSec = Math.ceil((entry.resetTime - now) / 1000);
+      showToast(`Submission limit reached. Please wait ${waitSec}s before retrying.`);
+      return false;
+    }
+
+    entry.count += 1;
+    entry.lastSubmit = now;
+    formSubmissionsTracker.set(formId, entry);
+    return true;
+  }
 
   // 10.1 Program Enrollment Form Handler
   const enrollForm = document.getElementById('enrollForm');
   if (enrollForm) {
     enrollForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+
+      if (!checkFormRateLimit('enrollForm')) return;
 
       // Check Authentication Before Submission
       const currentUser = window.CBA9_BACKEND ? await window.CBA9_BACKEND.getCurrentUser() : null;
@@ -850,17 +912,41 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
       }
 
+      const rawPlanName = enrollPlanNameInput ? enrollPlanNameInput.value : currentSelectedPlan.name;
+      const rawPlanSlug = enrollPlanSlugInput ? enrollPlanSlugInput.value : currentSelectedPlan.slug;
+      const rawName = document.getElementById('enrollName')?.value || '';
+      const rawEmail = document.getElementById('enrollEmail')?.value || '';
+      const rawPhone = document.getElementById('enrollPhone')?.value || '';
+      const rawFitnessLevel = document.getElementById('enrollFitnessLevel')?.value || '';
+      const rawGoal = document.getElementById('enrollGoal')?.value || '';
+      const rawNotes = document.getElementById('enrollNotes')?.value || '';
+
+      // Input Validation
+      if (!rawName.trim() || rawName.trim().length < 2) {
+        showToast('Please enter your full name (at least 2 characters).');
+        return;
+      }
+      if (!isValidEmail(rawEmail)) {
+        showToast('Please enter a valid email address.');
+        return;
+      }
+      if (rawPhone && !isValidPhone(rawPhone)) {
+        showToast('Please enter a valid phone number (e.g. +1 234 567 8900).');
+        return;
+      }
+
+      // Sanitize Inputs
+      const planName = sanitizeInput(rawPlanName, 100);
+      const planSlug = sanitizeInput(rawPlanSlug, 50);
+      const name = sanitizeInput(rawName, 100);
+      const email = sanitizeInput(rawEmail, 254).toLowerCase();
+      const phone = sanitizeInput(rawPhone, 30);
+      const fitnessLevel = sanitizeInput(rawFitnessLevel, 50);
+      const goal = sanitizeInput(rawGoal, 200);
+      const notes = sanitizeInput(rawNotes, 2000);
+
       const submitBtn = enrollForm.querySelector('button[type="submit"]');
       const originalText = submitBtn ? submitBtn.innerHTML : 'Submit';
-
-      const planName = enrollPlanNameInput ? enrollPlanNameInput.value : currentSelectedPlan.name;
-      const planSlug = enrollPlanSlugInput ? enrollPlanSlugInput.value : currentSelectedPlan.slug;
-      const name = document.getElementById('enrollName')?.value || '';
-      const email = document.getElementById('enrollEmail')?.value || '';
-      const phone = document.getElementById('enrollPhone')?.value || '';
-      const fitnessLevel = document.getElementById('enrollFitnessLevel')?.value || '';
-      const goal = document.getElementById('enrollGoal')?.value || '';
-      const notes = document.getElementById('enrollNotes')?.value || '';
 
       if (submitBtn) {
         submitBtn.innerHTML = 'Securing Your Spot...';
@@ -898,6 +984,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     coachForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
+      if (!checkFormRateLimit('coachContactForm')) return;
+
       // Check Authentication Before Submission
       const currentUser = window.CBA9_BACKEND ? await window.CBA9_BACKEND.getCurrentUser() : null;
       if (!currentUser) {
@@ -907,13 +995,33 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
       }
 
+      const rawName = document.getElementById('contactName')?.value || '';
+      const rawEmail = document.getElementById('contactEmail')?.value || '';
+      const rawGoal = document.getElementById('contactGoal')?.value || '';
+      const rawMessage = document.getElementById('contactMessage')?.value || '';
+
+      // Input Validation
+      if (!rawName.trim() || rawName.trim().length < 2) {
+        showToast('Please enter your full name (at least 2 characters).');
+        return;
+      }
+      if (!isValidEmail(rawEmail)) {
+        showToast('Please enter a valid email address.');
+        return;
+      }
+      if (!rawMessage.trim() || rawMessage.trim().length < 5) {
+        showToast('Please provide a message or background details (at least 5 characters).');
+        return;
+      }
+
+      // Sanitize Inputs
+      const name = sanitizeInput(rawName, 100);
+      const email = sanitizeInput(rawEmail, 254).toLowerCase();
+      const goal = sanitizeInput(rawGoal, 200);
+      const message = sanitizeInput(rawMessage, 3000);
+
       const submitBtn = coachForm.querySelector('button[type="submit"]');
       const originalText = submitBtn ? submitBtn.innerHTML : 'Submit';
-
-      const name = document.getElementById('contactName')?.value || '';
-      const email = document.getElementById('contactEmail')?.value || '';
-      const goal = document.getElementById('contactGoal')?.value || '';
-      const message = document.getElementById('contactMessage')?.value || '';
 
       if (submitBtn) {
         submitBtn.innerHTML = 'Sending Request...';
@@ -947,6 +1055,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     consultModalForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
+      if (!checkFormRateLimit('modalConsultForm')) return;
+
       // Check Authentication Before Submission
       const currentUser = window.CBA9_BACKEND ? await window.CBA9_BACKEND.getCurrentUser() : null;
       if (!currentUser) {
@@ -957,12 +1067,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
       }
 
+      const rawName = consultModalForm.querySelector('input[type="text"]')?.value || '';
+      const rawEmail = consultModalForm.querySelector('input[type="email"]')?.value || '';
+      const rawGoal = consultModalForm.querySelector('select')?.value || 'Free Strategy Call';
+
+      // Input Validation
+      if (!rawName.trim() || rawName.trim().length < 2) {
+        showToast('Please enter your full name (at least 2 characters).');
+        return;
+      }
+      if (!isValidEmail(rawEmail)) {
+        showToast('Please enter a valid email address.');
+        return;
+      }
+
+      // Sanitize Inputs
+      const name = sanitizeInput(rawName, 100);
+      const email = sanitizeInput(rawEmail, 254).toLowerCase();
+      const goal = sanitizeInput(rawGoal, 200);
+
       const submitBtn = consultModalForm.querySelector('button[type="submit"]');
       const originalText = submitBtn ? submitBtn.innerHTML : 'Submit';
-
-      const name = consultModalForm.querySelector('input[type="text"]')?.value || '';
-      const email = consultModalForm.querySelector('input[type="email"]')?.value || '';
-      const goal = consultModalForm.querySelector('select')?.value || 'Free Strategy Call';
 
       if (submitBtn) {
         submitBtn.innerHTML = 'Booking Session...';
@@ -995,8 +1120,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (newsletterForm) {
     newsletterForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+
+      if (!checkFormRateLimit('newsletterForm')) return;
+
       const emailInput = newsletterForm.querySelector('input[type="email"]');
-      const email = emailInput ? emailInput.value : '';
+      const rawEmail = emailInput ? emailInput.value : '';
+
+      if (!isValidEmail(rawEmail)) {
+        showToast('Please enter a valid email address.');
+        return;
+      }
+
+      const email = sanitizeInput(rawEmail, 254).toLowerCase();
 
       if (window.CBA9_BACKEND && email) {
         await window.CBA9_BACKEND.recordSubscriber(email);

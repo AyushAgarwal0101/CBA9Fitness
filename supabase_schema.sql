@@ -118,97 +118,133 @@ CREATE TABLE IF NOT EXISTS public.newsletter_subscribers (
 );
 
 -- ==============================================================================
--- 7. ROW LEVEL SECURITY (RLS) POLICIES
+-- 7. ROW LEVEL SECURITY (RLS) POLICIES (AUDITED & HARDENED)
 -- ==============================================================================
 
+-- 7.1 Enable RLS on all tables
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.training_plans ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.enrollments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.consultations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.newsletter_subscribers ENABLE ROW LEVEL SECURITY;
 
--- 7.1 users policies
-CREATE POLICY "Users can view their own profile" 
+-- 7.2 DROP OLD POLICIES (Idempotent Migration)
+DROP POLICY IF EXISTS "Users can view their own profile" ON public.users;
+DROP POLICY IF EXISTS "Users can update their own profile" ON public.users;
+DROP POLICY IF EXISTS "Admins full access to users" ON public.users;
+DROP POLICY IF EXISTS "Public can view active training plans" ON public.training_plans;
+DROP POLICY IF EXISTS "Admins full access to training plans" ON public.training_plans;
+DROP POLICY IF EXISTS "Public and users can submit program enrollments" ON public.enrollments;
+DROP POLICY IF EXISTS "Users can view their own enrollments" ON public.enrollments;
+DROP POLICY IF EXISTS "Admins full access to enrollments" ON public.enrollments;
+DROP POLICY IF EXISTS "Public and users can submit consultation requests" ON public.consultations;
+DROP POLICY IF EXISTS "Users can view their own consultations" ON public.consultations;
+DROP POLICY IF EXISTS "Admins full access to consultations" ON public.consultations;
+DROP POLICY IF EXISTS "Public can subscribe to newsletter" ON public.newsletter_subscribers;
+DROP POLICY IF EXISTS "Admins full access to newsletter subscribers" ON public.newsletter_subscribers;
+
+-- 7.3 TABLE: users policies (Strict User Isolation)
+CREATE POLICY "Athletes can view own profile" 
   ON public.users 
   FOR SELECT 
   TO authenticated 
   USING (auth.uid() = id);
 
-CREATE POLICY "Users can update their own profile" 
+CREATE POLICY "Athletes can update own profile" 
   ON public.users 
   FOR UPDATE 
   TO authenticated 
   USING (auth.uid() = id)
   WITH CHECK (auth.uid() = id);
 
-CREATE POLICY "Admins full access to users" 
+CREATE POLICY "Athletes can insert own profile" 
+  ON public.users 
+  FOR INSERT 
+  TO authenticated 
+  WITH CHECK (auth.uid() = id);
+
+CREATE POLICY "Service role full access to users" 
   ON public.users 
   FOR ALL 
-  TO authenticated 
+  TO service_role 
   USING (true) 
   WITH CHECK (true);
 
--- 7.2 training_plans policies
+-- 7.4 TABLE: training_plans policies (Public Catalog)
 CREATE POLICY "Public can view active training plans" 
   ON public.training_plans 
   FOR SELECT 
   USING (is_active = true);
 
-CREATE POLICY "Admins full access to training plans" 
+CREATE POLICY "Service role full access to training plans" 
   ON public.training_plans 
   FOR ALL 
-  TO authenticated 
+  TO service_role 
   USING (true) 
   WITH CHECK (true);
 
--- 7.3 enrollments policies
-CREATE POLICY "Public and users can submit program enrollments" 
+-- 7.5 TABLE: enrollments policies (Submission allowed, Zero cross-user read)
+CREATE POLICY "Public and athletes can submit program enrollments" 
   ON public.enrollments 
   FOR INSERT 
   WITH CHECK (true);
 
-CREATE POLICY "Users can view their own enrollments" 
+CREATE POLICY "Athletes can view own enrollments" 
   ON public.enrollments 
   FOR SELECT 
   TO authenticated 
   USING (auth.uid() = user_id);
 
-CREATE POLICY "Admins full access to enrollments" 
+CREATE POLICY "Athletes can update own enrollments" 
+  ON public.enrollments 
+  FOR UPDATE 
+  TO authenticated 
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Service role full access to enrollments" 
   ON public.enrollments 
   FOR ALL 
-  TO authenticated 
+  TO service_role 
   USING (true) 
   WITH CHECK (true);
 
--- 7.4 consultations policies
-CREATE POLICY "Public and users can submit consultation requests" 
+-- 7.6 TABLE: consultations policies (Submission allowed, Zero cross-user read)
+CREATE POLICY "Public and athletes can submit consultation requests" 
   ON public.consultations 
   FOR INSERT 
   WITH CHECK (true);
 
-CREATE POLICY "Users can view their own consultations" 
+CREATE POLICY "Athletes can view own consultations" 
   ON public.consultations 
   FOR SELECT 
   TO authenticated 
   USING (auth.uid() = user_id);
 
-CREATE POLICY "Admins full access to consultations" 
+CREATE POLICY "Athletes can update own consultations" 
+  ON public.consultations 
+  FOR UPDATE 
+  TO authenticated 
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Service role full access to consultations" 
   ON public.consultations 
   FOR ALL 
-  TO authenticated 
+  TO service_role 
   USING (true) 
   WITH CHECK (true);
 
--- 7.5 newsletter_subscribers policies
+-- 7.7 TABLE: newsletter_subscribers policies (Write-only for public, Read-only for admin)
 CREATE POLICY "Public can subscribe to newsletter" 
   ON public.newsletter_subscribers 
   FOR INSERT 
   WITH CHECK (true);
 
-CREATE POLICY "Admins full access to newsletter subscribers" 
+CREATE POLICY "Service role full access to newsletter subscribers" 
   ON public.newsletter_subscribers 
   FOR ALL 
-  TO authenticated 
+  TO service_role 
   USING (true) 
   WITH CHECK (true);
 

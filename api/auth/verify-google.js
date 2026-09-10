@@ -3,6 +3,7 @@
  * ==============================================================================
  * Vercel Serverless Function: /api/auth/verify-google
  * Verifies Google ID Tokens, creates/updates user in database, and issues session.
+ * Includes CORS origin restriction, rate limiting, and input validation.
  * ==============================================================================
  */
 
@@ -12,9 +13,24 @@ const { OAuth2Client } = require('google-auth-library');
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '';
 const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 
-// Simple In-Memory Rate Limiting for auth endpoint
+// Whitelisted origins for secure CORS
+const ALLOWED_ORIGINS = [
+  'https://cba-9-fitness.vercel.app',
+  'https://cba9fitness.vercel.app',
+  'https://cba9fitness.com',
+  'http://localhost:8080',
+  'http://localhost:3000',
+  'http://127.0.0.1:8080'
+];
+
+function isOriginAllowed(origin) {
+  if (!origin) return false;
+  return ALLOWED_ORIGINS.includes(origin) || origin.endsWith('.vercel.app');
+}
+
+// In-Memory Rate Limiting for auth endpoint (20 requests / minute / IP)
 const rateLimitMap = new Map();
-const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
+const RATE_LIMIT_WINDOW_MS = 60 * 1000;
 const MAX_REQUESTS_PER_WINDOW = 20;
 
 function checkRateLimit(ip) {
@@ -34,25 +50,28 @@ function checkRateLimit(ip) {
 }
 
 module.exports = async function handler(req, res) {
-  // 1. Enable Secure CORS
+  const origin = req.headers.origin;
+  const allowOrigin = isOriginAllowed(origin) ? origin : ALLOWED_ORIGINS[0];
+
   res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader('Access-Control-Allow-Origin', allowOrigin);
+  res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
   res.setHeader(
     'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization'
+    'X-CSRF-Token, X-Requested-With, Accept, Content-Length, Content-Type, Date, Authorization'
   );
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
 
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
+    return res.status(200).end();
   }
 
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed. Only POST is supported.' });
   }
 
-  // 2. Rate Limiting Check
+  // Rate Limiting Check
   const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
   if (!checkRateLimit(clientIp)) {
     return res.status(429).json({ error: 'Too many authentication attempts. Please wait 1 minute.' });
@@ -62,13 +81,12 @@ module.exports = async function handler(req, res) {
     const { idToken, credential } = req.body || {};
     const tokenToVerify = idToken || credential;
 
-    if (!tokenToVerify) {
-      return res.status(400).json({ error: 'Missing required Google ID token/credential.' });
+    if (!tokenToVerify || typeof tokenToVerify !== 'string' || tokenToVerify.length > 4096) {
+      return res.status(400).json({ error: 'Invalid or missing Google ID token parameter.' });
     }
 
     let payload = null;
 
-    // Verify token with Google Auth Library if Client ID is present, or parse token payload
     if (GOOGLE_CLIENT_ID) {
       const ticket = await client.verifyIdToken({
         idToken: tokenToVerify,
@@ -76,29 +94,28 @@ module.exports = async function handler(req, res) {
       });
       payload = ticket.getPayload();
     } else {
-      // Decode JWT payload safely
       const parts = tokenToVerify.split('.');
       if (parts.length === 3) {
         const decoded = Buffer.from(parts[1], 'base64').toString('utf8');
         payload = JSON.parse(decoded);
       } else {
-        throw new Error('Invalid token structure');
+        throw new Error('Malformed token structure');
       }
     }
 
-    if (!payload || !payload.email) {
+    if (!payload || !payload.email || typeof payload.email !== 'string') {
       return res.status(401).json({ error: 'Invalid Google token payload.' });
     }
 
-    // Extract verified Google Profile data
+    // Extract verified athlete profile data
     const googleUser = {
-      google_id: payload.sub,
-      email: payload.email,
-      email_verified: payload.email_verified,
-      name: payload.name || payload.email.split('@')[0],
-      given_name: payload.given_name || payload.name,
-      family_name: payload.family_name || '',
-      picture: payload.picture || '',
+      google_id: String(payload.sub || ''),
+      email: String(payload.email || '').toLowerCase().trim(),
+      email_verified: Boolean(payload.email_verified),
+      name: String(payload.name || payload.email.split('@')[0]).substring(0, 100),
+      given_name: String(payload.given_name || payload.name || '').substring(0, 50),
+      family_name: String(payload.family_name || '').substring(0, 50),
+      picture: String(payload.picture || '').substring(0, 500),
       last_login: new Date().toISOString()
     };
 
@@ -109,10 +126,10 @@ module.exports = async function handler(req, res) {
     });
 
   } catch (error) {
-    console.error('❌ Google Token Verification Failed:', error);
+    console.error('❌ Google Token Verification Failed:', error.message);
     return res.status(401).json({
       success: false,
-      error: 'Google token verification failed. ' + (error.message || '')
+      error: 'Google token verification failed.'
     });
   }
 };

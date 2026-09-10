@@ -1,5 +1,21 @@
+# Node dependencies
+node_modules/
+package-lock.json
+
+# Environment variables and secrets
+.env
+.env.local
+.env.*.local
+*.env
+
+# Operating System Files
 .DS_Store
 Thumbs.db
 *.log
+
+# IDEs and Editors
 .vscode/
 .idea/
+
+# Temporary / Scratch files
+scratch/

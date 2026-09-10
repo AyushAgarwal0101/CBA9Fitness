@@ -8,9 +8,8 @@
     "test": "node -c main.js && node -c supabase-config.js"
   },
   "dependencies": {
-    "google-auth-library": "^9.15.1"
+    "google-auth-library": "^11.0.2"
   },
-  "devDependencies": {},
   "type": "commonjs",
   "keywords": [
     "fitness",

@@ -337,12 +337,33 @@ async function fetchActivePlansFromDB() {
 }
 
 /**
+/**
+ * Sanitizes and truncates string values for database insertion.
+ */
+function sanitizeField(value, maxLength = 255) {
+  if (value === null || value === undefined) return null;
+  const str = String(value)
+    .replace(/<[^>]*>?/gm, '')
+    .trim();
+  return str.substring(0, maxLength);
+}
+
+/**
  * Record a customer program enrollment in Supabase and notify Admin Gmail.
  */
 async function recordProgramEnrollment(enrollmentData) {
   const supabase = getSupabaseClient();
   const currentUser = await getCurrentUser();
   const userId = currentUser ? currentUser.id : (enrollmentData.userId || null);
+
+  const cleanPlanName = sanitizeField(enrollmentData.planName, 100) || 'General Program';
+  const cleanPlanSlug = sanitizeField(enrollmentData.planSlug, 50);
+  const cleanName = sanitizeField(enrollmentData.name, 100) || 'Athlete';
+  const cleanEmail = sanitizeField(enrollmentData.email, 254)?.toLowerCase() || '';
+  const cleanPhone = sanitizeField(enrollmentData.phone, 30);
+  const cleanFitnessLevel = sanitizeField(enrollmentData.fitnessLevel, 50) || 'Intermediate';
+  const cleanGoal = sanitizeField(enrollmentData.goal, 200);
+  const cleanNotes = sanitizeField(enrollmentData.notes, 2000);
 
   // 1. If Supabase is connected, record in the database
   if (supabase) {
@@ -351,14 +372,14 @@ async function recordProgramEnrollment(enrollmentData) {
         .from('enrollments')
         .insert([{
           user_id: userId,
-          plan_slug: enrollmentData.planSlug || null,
-          plan_name: enrollmentData.planName,
-          customer_name: enrollmentData.name,
-          customer_email: enrollmentData.email,
-          customer_phone: enrollmentData.phone || null,
-          fitness_level: enrollmentData.fitnessLevel || 'Intermediate',
-          primary_goal: enrollmentData.goal || null,
-          notes: enrollmentData.notes || null,
+          plan_slug: cleanPlanSlug,
+          plan_name: cleanPlanName,
+          customer_name: cleanName,
+          customer_email: cleanEmail,
+          customer_phone: cleanPhone,
+          fitness_level: cleanFitnessLevel,
+          primary_goal: cleanGoal,
+          notes: cleanNotes,
           status: 'pending'
         }])
         .select();
@@ -369,19 +390,19 @@ async function recordProgramEnrollment(enrollmentData) {
       console.error('❌ Supabase recordProgramEnrollment error:', err);
     }
   } else {
-    console.info('ℹ️ [Local Mode] Enrollment recorded:', enrollmentData);
+    console.info('ℹ️ [Local Mode] Enrollment recorded:', { cleanPlanName, cleanName, cleanEmail });
   }
 
   // 2. Dispatch admin email alert to your Gmail
   await dispatchAdminEmailNotification('New Program Enrollment', {
     "Customer Account": currentUser ? `Verified Google User (${currentUser.email})` : 'Guest Signup',
-    "Program": enrollmentData.planName,
-    "Customer Name": enrollmentData.name,
-    "Customer Email": enrollmentData.email,
-    "Customer Phone": enrollmentData.phone || 'Not provided',
-    "Fitness Level": enrollmentData.fitnessLevel || 'Not specified',
-    "Primary Goal": enrollmentData.goal || 'General Improvement',
-    "Notes": enrollmentData.notes || 'None'
+    "Program": cleanPlanName,
+    "Customer Name": cleanName,
+    "Customer Email": cleanEmail,
+    "Customer Phone": cleanPhone || 'Not provided',
+    "Fitness Level": cleanFitnessLevel,
+    "Primary Goal": cleanGoal || 'General Improvement',
+    "Notes": cleanNotes || 'None'
   });
 
   return { success: true };
@@ -395,6 +416,13 @@ async function recordConsultationRequest(consultData) {
   const currentUser = await getCurrentUser();
   const userId = currentUser ? currentUser.id : (consultData.userId || null);
 
+  const cleanName = sanitizeField(consultData.name, 100) || 'Athlete';
+  const cleanEmail = sanitizeField(consultData.email, 254)?.toLowerCase() || '';
+  const cleanPhone = sanitizeField(consultData.phone, 30);
+  const cleanGoal = sanitizeField(consultData.goal, 200) || 'Free Strategy Call';
+  const cleanMessage = sanitizeField(consultData.message, 3000);
+  const cleanSource = sanitizeField(consultData.source, 50) || 'website_form';
+
   // 1. If Supabase is connected, record in database
   if (supabase) {
     try {
@@ -402,12 +430,12 @@ async function recordConsultationRequest(consultData) {
         .from('consultations')
         .insert([{
           user_id: userId,
-          name: consultData.name,
-          email: consultData.email,
-          phone: consultData.phone || null,
-          goal: consultData.goal || null,
-          message: consultData.message || null,
-          source: consultData.source || 'website_form',
+          name: cleanName,
+          email: cleanEmail,
+          phone: cleanPhone,
+          goal: cleanGoal,
+          message: cleanMessage,
+          source: cleanSource,
           status: 'new'
         }])
         .select();
@@ -418,18 +446,18 @@ async function recordConsultationRequest(consultData) {
       console.error('❌ Supabase recordConsultationRequest error:', err);
     }
   } else {
-    console.info('ℹ️ [Local Mode] Consultation recorded:', consultData);
+    console.info('ℹ️ [Local Mode] Consultation recorded:', { cleanName, cleanEmail, cleanGoal });
   }
 
   // 2. Dispatch admin email alert to your Gmail
   await dispatchAdminEmailNotification('New Consultation Request', {
     "Customer Account": currentUser ? `Verified Google User (${currentUser.email})` : 'Guest Submission',
-    "Lead Name": consultData.name,
-    "Email": consultData.email,
-    "Phone": consultData.phone || 'Not provided',
-    "Goal / Subject": consultData.goal || 'Free Strategy Call',
-    "Message": consultData.message || 'No extra notes',
-    "Source": consultData.source || 'website_form'
+    "Lead Name": cleanName,
+    "Email": cleanEmail,
+    "Phone": cleanPhone || 'Not provided',
+    "Goal / Subject": cleanGoal,
+    "Message": cleanMessage || 'No extra notes',
+    "Source": cleanSource
   });
 
   return { success: true };
@@ -440,12 +468,17 @@ async function recordConsultationRequest(consultData) {
  */
 async function recordNewsletterSubscription(email) {
   const supabase = getSupabaseClient();
+  const cleanEmail = sanitizeField(email, 254)?.toLowerCase() || '';
+
+  if (!cleanEmail || !cleanEmail.includes('@')) {
+    return { success: false, error: 'Invalid email address' };
+  }
 
   if (supabase) {
     try {
       const { data, error } = await supabase
         .from('newsletter_subscribers')
-        .upsert([{ email: email }], { onConflict: 'email' })
+        .upsert([{ email: cleanEmail }], { onConflict: 'email' })
         .select();
 
       if (error) throw error;
@@ -454,7 +487,7 @@ async function recordNewsletterSubscription(email) {
       console.error('❌ Supabase recordNewsletterSubscription error:', err);
     }
   } else {
-    console.info('ℹ️ [Local Mode] Newsletter subscriber registered:', email);
+    console.info('ℹ️ [Local Mode] Newsletter subscriber registered:', cleanEmail);
   }
 
   return { success: true };
