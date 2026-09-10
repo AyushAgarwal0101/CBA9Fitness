@@ -12,7 +12,7 @@ A modern, bold fitness and gym training website built with a dark, powerful aest
 - **Hero Typography**: Large, condensed headline *"SHAPE YOUR FUTURE THROUGH FITNESS"*.
 - **Center Hero Visual**: Muscular male athlete lifting dumbbells with a high-contrast black-and-white blend.
 - **Three Bottom Cards**:
-  - `Trusted By — 50,000+ Members` (with treadmill photo thumb)
+  - `Trusted By — 100+ Members` (with treadmill photo thumb)
   - `Personalized Workout Plans` (with Learn More program link)
   - `Battle Rope Power` (photo card)
 
