@@ -353,24 +353,26 @@ button, input, textarea, select {
   margin-bottom: 0.75rem;
 }
 
-/* Center Athlete Visual */
+/* Center Athlete Visual with Floating Gym Element Animations */
 .hero-centerpiece {
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 1rem 0 1.5rem;
+  margin: 1.5rem 0 2rem;
+  width: 100%;
 }
 
 .athlete-image-wrapper {
   position: relative;
-  max-width: 580px;
+  max-width: 560px;
   width: 100%;
   height: 380px;
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), var(--shadow-glow);
   border: 1px solid var(--border-subtle);
+  z-index: 2;
 }
 
 .athlete-image-wrapper img {
@@ -419,6 +421,160 @@ button, input, textarea, select {
   background-color: #22C55E;
   border-radius: 50%;
   box-shadow: 0 0 10px #22C55E;
+}
+
+/* ==========================================================================
+   Rotating & Floating Dumbbell / Barbell Animations (In-Theme)
+   ========================================================================== */
+.hero-floating-deco {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.deco-left {
+  left: calc(50% - 370px);
+}
+
+.deco-right {
+  right: calc(50% - 370px);
+}
+
+.deco-icon-card {
+  background: rgba(14, 22, 36, 0.8);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border-active);
+  border-radius: var(--radius-md);
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), var(--shadow-glow);
+  color: var(--steel-blue-light);
+}
+
+.deco-label {
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+/* Keyframes */
+@keyframes floatSlow {
+  0% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(4deg);
+  }
+  100% {
+    transform: translateY(8px) rotate(-3deg);
+  }
+}
+
+@keyframes floatReverse {
+  0% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(12px) rotate(-4deg);
+  }
+  100% {
+    transform: translateY(-8px) rotate(3deg);
+  }
+}
+
+@keyframes spinDumbbell {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spinBarbell {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes slowOrbit {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.float-slow {
+  animation: floatSlow 6.5s ease-in-out infinite alternate;
+}
+
+.float-reverse {
+  animation: floatReverse 7s ease-in-out infinite alternate;
+}
+
+.spinning-dumbbell {
+  animation: spinDumbbell 14s linear infinite;
+  transform-origin: center;
+  filter: drop-shadow(0 0 10px rgba(96, 165, 250, 0.6));
+}
+
+.spinning-barbell {
+  animation: spinBarbell 16s linear infinite;
+  transform-origin: center;
+  filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.6));
+}
+
+.deco-orbit-ring {
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  border: 1px dashed rgba(59, 130, 246, 0.35);
+  border-radius: 50%;
+  animation: slowOrbit 28s linear infinite;
+  pointer-events: none;
+}
+
+.ring-reverse {
+  animation: slowOrbit 32s linear infinite reverse;
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+.floating-weight-plate {
+  position: absolute;
+  color: rgba(148, 163, 184, 0.55);
+  animation: spinDumbbell 22s linear infinite;
+}
+
+.plate-left {
+  bottom: -35px;
+  left: -20px;
+}
+
+.plate-right {
+  top: -30px;
+  right: -20px;
+  animation-direction: reverse;
 }
 
 /* Hero Bottom Row */
@@ -1375,6 +1531,15 @@ button, input, textarea, select {
 /* ==========================================================================
    Responsive Breakpoints
    ========================================================================== */
+@media (max-width: 1200px) {
+  .deco-left {
+    left: calc(50% - 330px);
+  }
+  .deco-right {
+    right: calc(50% - 330px);
+  }
+}
+
 @media (max-width: 1024px) {
   .hero-top-row {
     grid-template-columns: 1fr;
@@ -1396,6 +1561,9 @@ button, input, textarea, select {
   }
   .footer-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+  .hero-floating-deco {
+    display: none;
   }
 }
 
