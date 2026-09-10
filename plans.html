@@ -340,9 +340,66 @@
       </div>
 
       <div style="display: flex; gap: 1rem;">
-        <a href="#consultModal" class="btn btn-primary consult-modal-trigger modal-close-trigger" style="flex: 1;">Enroll In Plan</a>
+        <button type="button" id="planModalEnrollBtn" class="btn btn-primary" style="flex: 1;">Enroll In Plan</button>
         <button class="btn btn-outline modal-close-trigger">Close</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Program Enrollment Modal (When customer joins a program) -->
+  <div id="enrollModal" class="modal-backdrop">
+    <div class="modal-card">
+      <button class="modal-close-btn modal-close-trigger" aria-label="Close modal">✕</button>
+      <div class="section-tag" style="margin-bottom: 0.5rem;">Join Program</div>
+      <h3 style="font-family: var(--font-heading); font-size: 2rem; color: #FFFFFF; margin-bottom: 0.3rem;" id="enrollModalTitle">ENROLL IN PROGRAM</h3>
+      <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Lock in your spot. Complete this form to record your enrollment and start your periodized training protocol.</p>
+      
+      <form id="enrollForm">
+        <input type="hidden" id="enrollPlanName" name="planName" value="">
+        <input type="hidden" id="enrollPlanSlug" name="planSlug" value="">
+
+        <div class="form-group">
+          <label class="form-label" for="enrollName">Full Name</label>
+          <input type="text" id="enrollName" class="form-input" placeholder="e.g. Alex Hunter" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="enrollEmail">Email Address (for plan access)</label>
+          <input type="email" id="enrollEmail" class="form-input" placeholder="alex@example.com" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="enrollPhone">Phone Number / WhatsApp</label>
+          <input type="tel" id="enrollPhone" class="form-input" placeholder="+91 98765 43210">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="enrollFitnessLevel">Current Experience Level</label>
+          <select id="enrollFitnessLevel" class="form-select">
+            <option value="Beginner (< 1 Year)">Beginner (&lt; 1 Year)</option>
+            <option value="Intermediate (1-3 Years)" selected>Intermediate (1-3 Years)</option>
+            <option value="Advanced (3+ Years)">Advanced (3+ Years)</option>
+            <option value="Elite Athlete">Elite Athlete</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="enrollGoal">Primary Focus</label>
+          <select id="enrollGoal" class="form-select">
+            <option>Hypertrophy & Muscle Growth</option>
+            <option>Maximal Strength & PRs</option>
+            <option>Accelerated Fat Loss</option>
+            <option>Athletic Conditioning & Agility</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="enrollNotes">Additional Notes / Injuries / Equipment Access</label>
+          <textarea id="enrollNotes" class="form-textarea" placeholder="Commercial gym access, past injuries, special requirements..." rows="3"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.95rem; font-size: 1rem;">Confirm Enrollment & Submit</button>
+      </form>
     </div>
   </div>
 
@@ -434,6 +491,9 @@
     </div>
   </div>
 
+  <!-- Supabase JS Client & Backend Config -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
   <script src="main.js"></script>
 </body>
 </html>

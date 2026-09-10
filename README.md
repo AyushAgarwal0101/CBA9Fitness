@@ -1,47 +1,85 @@
 # CBA9Fitness — High-Performance Athletic Gym Website
 
-A modern, bold fitness and gym training website built with a dark, powerful aesthetic, featuring deep navy and steel-blue tones, high-impact condensed typography, and a clean, uncluttered layout.
+A modern, bold fitness and gym training website built with a dark, powerful aesthetic, featuring deep navy and steel-blue tones, high-impact condensed typography, smooth scroll navigation, a full **Supabase backend**, and automated admin notification workflows.
 
 ---
 
-## 🏋️‍♂️ Pages & Features
+## 🏋️‍♂️ Pages & Sections
 
 ### 1. Home Page (`index.html`)
-- **Dark Navy / Steel-Blue Aesthetic**: Deep background with subtle gym photo overlay.
-- **Top Navigation Bar**: Brand logo `CBA9FITNESS` (with custom dumbbell icon), navigation links (*Programs / Trainers / Community*), and white *"Start Here"* CTA.
-- **Hero Typography**: Large, condensed headline *"SHAPE YOUR FUTURE THROUGH FITNESS"*.
-- **Center Hero Visual**: Muscular male athlete lifting dumbbells with a high-contrast black-and-white blend.
-- **Three Bottom Cards**:
-  - `Trusted By — 100+ Members` (with treadmill photo thumb)
-  - `Personalized Workout Plans` (with Learn More program link)
-  - `Battle Rope Power` (photo card)
+- **Continuous 4-Section Flow**: Smooth scroll navigation connecting `#hero`, `#programs`, `#trainers`, and `#community`.
+- **Top Sticky Navbar**: Brand logo `CBA9FITNESS` with custom dumbbell icon, active scroll-spy links, and *"Start Here"* CTA.
+- **Hero & Animations**: High-impact athletic imagery with rotating dumbbell/barbell animations.
+- **Dynamic Training Plans**: Dynamically loaded from Supabase with interactive detail modal & dedicated program enrollment modal.
+- **Trainer Section**: Head Coach Arijit Basu profile, credentials, and direct contact form.
+- **Community & Transformations**: Client Before & After showcases with 100+ member metrics.
 
-### 2. Why Trust Us / Transformations (`transformations.html`)
-- **Section Title**: *"WHY TRUST US"* with subtitle *"Real people. Real transformations."*
-- **Grid Layout**: 8 client transformation cards with side-by-side **Before** & **After** imagery.
-- **Transformation Data**: Client first name, program duration (e.g. 8 to 24 weeks), and verified result quotes.
+### 2. Training Plans (`plans.html`)
+- Filterable category tabs (*Strength Building, Fat Loss, Muscle Gain, Beginner Friendly, Athletic Performance*).
+- Interactive plan cards loaded from Supabase backend.
+- **"Enroll In Plan"** modal capturing customer name, email, phone, fitness level, and notes.
 
-### 3. Training Plans (`plans.html`)
-- **Section Title**: *"TRAINING PLANS FOR EVERY GOAL"*.
-- **Filterable Category Tabs**:
-  - All Plans
-  - Strength Building
-  - Fat Loss
-  - Muscle Gain
-  - Beginner Friendly
-  - Athletic Performance
-- **3-Column Grid**: Session badges, difficulty level indicators, duration, and interactive **"View Plan"** detail popup modals.
+### 3. Meet the Coach (`coach.html`)
+- Head Coach Arijit Basu bio, certifications (*CSCS, NASM-CPT, Precision Nutrition, FMS*), and strategy call booking form.
 
-### 4. Meet the Coach (`coach.html`)
-- **Split Hero**: Head Coach Arijit Basu portrait, 12+ years experience badge, certifications (*CSCS, NASM-CPT, Precision Nutrition, FMS*), and coaching philosophy bio.
-- **Specialty Matrix**: Strength Training, Nutrition Coaching, Injury Recovery, and Functional Conditioning.
-- **Contact & Consultation**: Direct phone, email, facility address, social links, and an interactive **"Book a Free Consultation"** contact form.
+### 4. Community Transformations (`transformations.html`)
+- 8 client transformation cards with side-by-side Before/After imagery and metrics.
 
 ---
 
-## 🚀 Quick Start (Local Run)
+## ⚡ Supabase Backend Integration
 
-You can view the website by simply opening `index.html` in any browser, or by running a local web server:
+The project includes complete backend support for **Supabase**:
+
+### 🗄️ Database Tables (`supabase_schema.sql`):
+1. **`training_plans`**: Stores dynamic workout programs, difficulty, duration, pricing, and features.
+2. **`enrollments`**: Records customer signups when they join a program (stores name, email, phone, fitness level, goals, and notes).
+3. **`consultations`**: Records strategy calls booked and direct messages sent to Coach Arijit Basu.
+4. **`newsletter_subscribers`**: Stores newsletter emails with deduplication.
+
+### 🔒 Row Level Security (RLS):
+- Public read enabled for active training plans.
+- Public insert enabled for enrollments, consultations, and subscribers.
+- Authenticated admin full access.
+
+---
+
+## 🚀 Supabase Setup & Connecting Your Gmail
+
+### Step 1: Create a Supabase Project
+1. Go to [https://supabase.com](https://supabase.com) and create a free project.
+2. In your Supabase Dashboard, go to **SQL Editor** -> **New Query**.
+3. Copy and paste the entire contents of [`supabase_schema.sql`](supabase_schema.sql) and click **Run**. This creates all tables and seeds the initial 6 programs.
+
+### Step 2: Configure API Keys & Admin Gmail
+Open [`supabase-config.js`](supabase-config.js) and update the `SUPABASE_CONFIG` object:
+```javascript
+const SUPABASE_CONFIG = {
+  SUPABASE_URL: "https://your-project-ref.supabase.co",
+  SUPABASE_ANON_KEY: "your-anon-public-key",
+  ADMIN_EMAIL: "your-email@gmail.com", // Enter your Gmail here
+  EDGE_FUNCTION_URL: "https://your-project-ref.supabase.co/functions/v1/notify-admin"
+};
+```
+
+### Step 3: (Optional) Deploy Edge Function for Live Gmail Alerts
+To receive live formatted emails in your Gmail whenever a customer enrolls:
+```bash
+# 1. Install Supabase CLI (if not installed)
+npm i -g supabase
+
+# 2. Login and deploy function
+supabase login
+supabase link --project-ref your-project-ref
+supabase functions deploy notify-admin
+
+# 3. Add Resend API key or Admin Email secret
+supabase secrets set RESEND_API_KEY=re_xxxxxxxx ADMIN_EMAIL=your-email@gmail.com
+```
+
+---
+
+## 🖥️ Local Run
 
 ### Using Python:
 ```bash
@@ -49,15 +87,9 @@ python -m http.server 8080
 ```
 Then visit [http://localhost:8080](http://localhost:8080) in your browser.
 
-### Using Node.js:
-```bash
-npx serve .
-```
-
 ---
 
 ## 🎨 Tech Stack
-- **HTML5**: Semantic, accessible markup.
-- **CSS3**: Custom properties (CSS variables), modern Flexbox & Grid layouts, backdrop filters, responsive breakpoints.
-- **JavaScript (Vanilla)**: Clean client-side interactions, mobile navigation drawer, tab filtering, and modal dialogs.
-- **Google Fonts**: `Oswald`, `Bebas Neue`, and `Inter`.
+- **Frontend**: HTML5, CSS3 (Modern Flexbox/Grid, CSS Variables), Vanilla JavaScript.
+- **Backend & Database**: Supabase (PostgreSQL, Row Level Security, Edge Functions).
+- **Typography**: `Oswald`, `Bebas Neue`, and `Inter` via Google Fonts.
