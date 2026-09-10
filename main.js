@@ -144,53 +144,134 @@ document.addEventListener('DOMContentLoaded', async () => {
         plansContainer.appendChild(card);
       });
 
-      // Re-bind click listeners for newly created dynamic cards
-      bindViewPlanTriggers();
+      // Re-apply active category filter for newly populated cards
+      const activeFilterBtn = document.querySelector('.filter-btn.active');
+      const activeCategory = activeFilterBtn ? activeFilterBtn.getAttribute('data-category') : 'all';
+      applyPlansFilter(activeCategory || 'all');
     }
   }
 
   function normalizeCategory(cat) {
     if (!cat) return 'all';
-    const c = cat.toLowerCase();
-    if (c.includes('month') && !c.includes('3') && !c.includes('6') && !c.includes('12')) return 'monthly';
-    if (c.includes('3') || c.includes('quarter')) return '3months';
-    if (c.includes('6')) return '6months';
-    if (c.includes('year') || c.includes('12')) return 'yearly';
-    if (c.includes('smart')) return 'smart';
+    const c = String(cat).toLowerCase().trim();
+    if (c === 'all') return 'all';
+    if (c === 'monthly' || (c.includes('month') && !c.includes('3') && !c.includes('6') && !c.includes('12')) || c === '1 month') return 'monthly';
+    if (c === '3months' || c.includes('3') || c.includes('quarter')) return '3months';
+    if (c === '6months' || c.includes('6')) return '6months';
+    if (c === 'yearly' || c.includes('year') || c.includes('12')) return 'yearly';
+    if (c === 'smart' || c.includes('smart') || c.includes('diet')) return 'smart';
     return c;
   }
+
+  // ==========================================================================
+  // 4. Training Plans Category Filtering & Matching Engine
+  // ==========================================================================
+  function isPlanCategoryMatch(card, selectedCategory) {
+    if (!selectedCategory || selectedCategory === 'all') return true;
+
+    const cardCat = (card.getAttribute('data-category') || '').toLowerCase().trim();
+    const cardSlug = (card.getAttribute('data-slug') || '').toLowerCase().trim();
+    const cardName = (card.getAttribute('data-name') || '').toLowerCase().trim();
+    const cardLabel = (card.getAttribute('data-category-label') || '').toLowerCase().trim();
+    const cardDuration = (card.getAttribute('data-duration') || '').toLowerCase().trim();
+
+    if (selectedCategory === 'monthly') {
+      return (
+        cardCat === 'monthly' ||
+        cardSlug.includes('monthly') ||
+        cardName.includes('monthly') ||
+        (cardDuration.includes('1 month') && !cardDuration.includes('12')) ||
+        (cardLabel.includes('1 month') && !cardLabel.includes('12'))
+      );
+    }
+
+    if (selectedCategory === '3months') {
+      return (
+        cardCat === '3months' ||
+        cardCat === '3-months' ||
+        cardSlug.includes('3') ||
+        cardName.includes('3 month') ||
+        cardDuration.includes('3 month') ||
+        cardLabel.includes('3 month')
+      );
+    }
+
+    if (selectedCategory === '6months') {
+      return (
+        cardCat === '6months' ||
+        cardCat === '6-months' ||
+        cardSlug.includes('6') ||
+        cardName.includes('6 month') ||
+        cardDuration.includes('6 month') ||
+        cardLabel.includes('6 month')
+      );
+    }
+
+    if (selectedCategory === 'yearly') {
+      return (
+        cardCat === 'yearly' ||
+        cardCat === '12months' ||
+        cardCat === '12-months' ||
+        cardSlug.includes('year') ||
+        cardSlug.includes('12') ||
+        cardName.includes('year') ||
+        cardDuration.includes('12 month') ||
+        cardLabel.includes('12 month')
+      );
+    }
+
+    if (selectedCategory === 'smart') {
+      return (
+        cardCat === 'smart' ||
+        cardSlug.includes('smart') ||
+        cardName.includes('smart') ||
+        cardLabel.includes('diet') ||
+        cardLabel.includes('smart') ||
+        cardDuration.includes('self-paced')
+      );
+    }
+
+    return cardCat === selectedCategory || cardSlug.includes(selectedCategory);
+  }
+
+  function applyPlansFilter(selectedCategory) {
+    const currentCards = document.querySelectorAll('.plan-card');
+    currentCards.forEach(card => {
+      const match = isPlanCategoryMatch(card, selectedCategory);
+      if (match) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  // Global Event Delegation for Filter Buttons
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+
+    const filterBar = btn.closest('.plans-filter-bar');
+    if (filterBar) {
+      filterBar.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    } else {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    }
+    btn.classList.add('active');
+
+    const category = (btn.getAttribute('data-category') || 'all').trim().toLowerCase();
+    applyPlansFilter(category);
+  });
 
   // Run dynamic loader if Supabase is connected
   await loadDynamicPlansFromSupabase();
 
-  // ==========================================================================
-  // 4. Training Plans Category Filtering
-  // ==========================================================================
-  const filterBtns = document.querySelectorAll('.filter-btn');
-
-  function initCategoryFilter() {
-    const cards = document.querySelectorAll('.plan-card');
-    if (filterBtns.length > 0 && cards.length > 0) {
-      filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          filterBtns.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-
-          const category = btn.getAttribute('data-category');
-
-          cards.forEach(card => {
-            const cardCategory = card.getAttribute('data-category');
-            if (category === 'all' || cardCategory === category) {
-              card.style.display = 'flex';
-            } else {
-              card.style.display = 'none';
-            }
-          });
-        });
-      });
-    }
+  // Apply initial active filter
+  const initialActiveBtn = document.querySelector('.filter-btn.active');
+  if (initialActiveBtn) {
+    const initialCategory = initialActiveBtn.getAttribute('data-category') || 'all';
+    applyPlansFilter(initialCategory);
   }
-  initCategoryFilter();
 
   // ==========================================================================
   // 5. Plan Details Modal & Enrollment Flow
@@ -212,55 +293,51 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   let currentSelectedPlan = { name: 'CBA9 Protocol', slug: 'general' };
 
-  function bindViewPlanTriggers() {
-    const viewPlanBtns = document.querySelectorAll('.view-plan-trigger');
-    if (viewPlanBtns.length > 0 && planModal) {
-      viewPlanBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.preventDefault();
-          const card = btn.closest('.plan-card');
-          if (!card) return;
+  // Global Event Delegation for View Plan buttons
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.view-plan-trigger');
+    if (!btn) return;
 
-          const title = card.getAttribute('data-name') || card.querySelector('.plan-name')?.innerText;
-          const slug = card.getAttribute('data-slug') || 'custom-plan';
-          const category = card.getAttribute('data-category-label') || 'Training Program';
-          const duration = card.getAttribute('data-duration') || '12 Weeks';
-          const difficulty = card.getAttribute('data-difficulty') || 'Intermediate';
-          const price = card.getAttribute('data-price') || '$149';
-          const desc = card.getAttribute('data-desc') || card.querySelector('.plan-desc')?.innerText;
-          const features = (card.getAttribute('data-features') || '').split('|');
+    e.preventDefault();
+    const card = btn.closest('.plan-card');
+    if (!card || !planModal) return;
 
-          currentSelectedPlan = { name: title, slug: slug };
+    const title = card.getAttribute('data-name') || card.querySelector('.plan-name')?.innerText || 'Training Plan';
+    const slug = card.getAttribute('data-slug') || 'custom-plan';
+    const category = card.getAttribute('data-category-label') || 'Training Program';
+    const duration = card.getAttribute('data-duration') || '12 Weeks';
+    const difficulty = card.getAttribute('data-difficulty') || 'Intermediate';
+    const price = card.getAttribute('data-price') || '';
+    const desc = card.getAttribute('data-desc') || card.querySelector('.plan-desc')?.innerText || '';
+    const features = (card.getAttribute('data-features') || '').split('|');
 
-          if (planModalTitle) planModalTitle.innerText = title;
-          if (planModalCategory) planModalCategory.innerText = category;
-          if (planModalDuration) planModalDuration.innerText = duration;
-          if (planModalDifficulty) planModalDifficulty.innerText = difficulty;
-          if (planModalPricing) planModalPricing.innerText = price;
-          if (planModalDesc) planModalDesc.innerText = desc;
+    currentSelectedPlan = { name: title, slug: slug };
 
-          if (planModalFeatures) {
-            planModalFeatures.innerHTML = '';
-            features.forEach(feat => {
-              if (feat.trim()) {
-                const li = document.createElement('li');
-                li.style.display = 'flex';
-                li.style.alignItems = 'center';
-                li.style.gap = '0.5rem';
-                li.style.marginBottom = '0.5rem';
-                li.style.color = '#CBD5E1';
-                li.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> <span>${feat.trim()}</span>`;
-                planModalFeatures.appendChild(li);
-              }
-            });
-          }
+    if (planModalTitle) planModalTitle.innerText = title;
+    if (planModalCategory) planModalCategory.innerText = category;
+    if (planModalDuration) planModalDuration.innerText = duration;
+    if (planModalDifficulty) planModalDifficulty.innerText = difficulty;
+    if (planModalPricing) planModalPricing.innerText = price;
+    if (planModalDesc) planModalDesc.innerText = desc;
 
-          openModal(planModal);
-        });
+    if (planModalFeatures) {
+      planModalFeatures.innerHTML = '';
+      features.forEach(feat => {
+        if (feat.trim()) {
+          const li = document.createElement('li');
+          li.style.display = 'flex';
+          li.style.alignItems = 'center';
+          li.style.gap = '0.5rem';
+          li.style.marginBottom = '0.5rem';
+          li.style.color = '#CBD5E1';
+          li.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> <span>${feat.trim()}</span>`;
+          planModalFeatures.appendChild(li);
+        }
       });
     }
-  }
-  bindViewPlanTriggers();
+
+    openModal(planModal);
+  });
 
   // Handle "Enroll In Plan" button inside Plan Details Modal
   if (planModalEnrollBtn) {
