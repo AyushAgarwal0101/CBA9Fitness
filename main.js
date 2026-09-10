@@ -482,6 +482,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  // Handle Quick Gmail Sign-In / Sign-Up Form
+  const quickGoogleAuthForm = document.getElementById('quickGoogleAuthForm');
+  if (quickGoogleAuthForm) {
+    quickGoogleAuthForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('quickAuthName')?.value || 'Athlete';
+      const email = document.getElementById('quickAuthEmail')?.value || 'athlete@gmail.com';
+
+      if (window.CBA9_BACKEND && window.CBA9_BACKEND.signInWithDemo) {
+        const result = window.CBA9_BACKEND.signInWithDemo(name, email);
+        if (result && result.user) {
+          closeAllModals();
+          handleAuthSuccessWelcome(result.user);
+          checkAndResumePendingAction(result.user);
+        }
+      }
+    });
+  }
+
   // Welcome Toast Notification helper
   function handleAuthSuccessWelcome(user) {
     if (!user) return;
