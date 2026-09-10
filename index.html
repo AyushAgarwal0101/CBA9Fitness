@@ -67,11 +67,53 @@
         <!-- Center Hero Visual: Muscular male athlete lifting dumbbells with left & right floating animations -->
         <div class="hero-centerpiece">
           
+          <!-- Background Concentric Glowing Orbit Rings (Matches Visual Showcase) -->
+          <div class="hero-glow-rings">
+            <div class="glow-ring glow-ring-1"></div>
+            <div class="glow-ring glow-ring-2"></div>
+            <div class="glow-ring glow-ring-3"></div>
+          </div>
+
+          <!-- Ambient Floating Cyber Particle Cubes -->
+          <div class="ambient-particle particle-1"></div>
+          <div class="ambient-particle particle-2"></div>
+          <div class="ambient-particle particle-3"></div>
+          <div class="ambient-particle particle-4"></div>
+
+          <!-- Floating Metric Card 1: Live Heart Rate Monitor (Top-Right) -->
+          <div class="hero-metric-badge badge-heart-rate float-slow">
+            <div class="metric-icon-wrap icon-heart">
+              <svg class="beating-heart" width="22" height="22" viewBox="0 0 24 24" fill="#EF4444" stroke="#EF4444" stroke-width="1.5">
+                <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" />
+              </svg>
+            </div>
+            <div class="metric-info">
+              <span class="metric-sub">Heart Rate</span>
+              <span class="metric-val">100 <small>bpm</small></span>
+            </div>
+          </div>
+
+          <!-- Floating Metric Card 2: Live Calories Burned (Bottom-Left) -->
+          <div class="hero-metric-badge badge-calories float-reverse">
+            <div class="metric-icon-wrap icon-calories">
+              <div class="equalizer-bars">
+                <span class="bar bar-1"></span>
+                <span class="bar bar-2"></span>
+                <span class="bar bar-3"></span>
+                <span class="bar bar-4"></span>
+              </div>
+            </div>
+            <div class="metric-info">
+              <span class="metric-sub">Calories Burned</span>
+              <span class="metric-val">100 <small>bpm</small></span>
+            </div>
+          </div>
+
           <!-- Left Floating Animated Dumbbell & Plate Orbit -->
           <div class="hero-floating-deco deco-left">
             <div class="deco-orbit-ring"></div>
             <div class="deco-icon-card float-slow">
-              <svg class="spinning-dumbbell" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg class="spinning-dumbbell" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="m6.5 6.5 11 11"/>
                 <path d="m21 21-1-1"/>
                 <path d="m3 3 1 1"/>
@@ -83,7 +125,7 @@
               <span class="deco-label">POWER</span>
             </div>
             <div class="floating-weight-plate plate-left">
-              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                 <circle cx="12" cy="12" r="10"></circle>
                 <circle cx="12" cy="12" r="4"></circle>
                 <line x1="12" y1="2" x2="12" y2="6"></line>
@@ -94,9 +136,9 @@
             </div>
           </div>
 
-          <!-- Main Athlete Image Center -->
-          <div class="athlete-image-wrapper">
-            <img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=1200&auto=format&fit=crop" alt="Male athlete lifting dumbbells at CBA9Fitness">
+          <!-- Main Athlete Image Center (High-Res Dumbbell Athlete) -->
+          <div class="athlete-image-wrapper athlete-showcase-box">
+            <img src="assets/hero-athlete.png" alt="Male athlete lifting dumbbell at CBA 9 Fitness" class="athlete-hero-img">
             <div class="hero-badge-float">
               <span class="pulse-dot"></span> Elite Training System
             </div>
@@ -106,7 +148,7 @@
           <div class="hero-floating-deco deco-right">
             <div class="deco-orbit-ring ring-reverse"></div>
             <div class="deco-icon-card float-reverse">
-              <svg class="spinning-barbell" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg class="spinning-barbell" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M2 12h20"/>
                 <rect x="5" y="7" width="3" height="10" rx="1"/>
                 <rect x="16" y="7" width="3" height="10" rx="1"/>
@@ -116,7 +158,7 @@
               <span class="deco-label">STRENGTH</span>
             </div>
             <div class="floating-weight-plate plate-right">
-              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                 <circle cx="12" cy="12" r="10"></circle>
                 <circle cx="12" cy="12" r="6" stroke-dasharray="3 3"></circle>
                 <polygon points="12 7 14 11 10 11"></polygon>
