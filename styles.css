@@ -220,18 +220,235 @@ button, input, textarea, select {
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.75rem;
   flex-shrink: 0;
 }
 
 .nav-actions .btn {
   white-space: nowrap;
-  padding: 0.55rem 1.25rem;
+  padding: 0.55rem 1.15rem;
   font-size: 0.85rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   border-radius: var(--radius-sm);
   height: 40px;
+}
+
+/* ==========================================================================
+   Customer Authentication & Profile Menu
+   ========================================================================== */
+.nav-auth-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.nav-signin-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
+  padding: 0.55rem 0.95rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  height: 40px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.nav-signin-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--steel-blue-light);
+  color: #FFFFFF;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.25);
+  transform: translateY(-1px);
+}
+
+.nav-signin-btn .google-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* Logged-In User Profile Avatar Dropdown */
+.user-profile-menu {
+  position: relative;
+  display: inline-block;
+}
+
+.user-avatar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(14, 22, 36, 0.9);
+  border: 1px solid var(--border-active);
+  border-radius: var(--radius-full);
+  padding: 0.25rem 0.75rem 0.25rem 0.25rem;
+  cursor: pointer;
+  transition: var(--transition);
+  color: #FFFFFF;
+  height: 40px;
+}
+
+.user-avatar-btn:hover {
+  border-color: var(--steel-blue-light);
+  box-shadow: 0 0 14px var(--steel-glow);
+  background: var(--bg-surface-elevated);
+}
+
+.user-avatar-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid var(--steel-blue-light);
+}
+
+.user-avatar-fallback {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--steel-blue), var(--steel-blue-dark));
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  border: 1.5px solid var(--steel-blue-light);
+}
+
+.user-name-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-chevron-icon {
+  width: 14px;
+  height: 14px;
+  color: var(--text-muted);
+  transition: transform 0.2s ease;
+}
+
+.user-profile-menu.open .user-chevron-icon {
+  transform: rotate(180deg);
+}
+
+.user-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-active);
+  border-radius: var(--radius-md);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), var(--shadow-glow);
+  width: 240px;
+  padding: 0.75rem 0;
+  z-index: 150;
+  display: none;
+  animation: fadeInDown 0.2s ease;
+}
+
+.user-profile-menu.open .user-dropdown-menu {
+  display: block;
+}
+
+.user-dropdown-header {
+  padding: 0.5rem 1rem 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.user-dropdown-name {
+  display: block;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #FFFFFF;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-dropdown-email {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-dropdown-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.4rem;
+  font-size: 0.75rem;
+  color: #10B981;
+  font-weight: 600;
+}
+
+.user-dropdown-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 6px #10B981;
+}
+
+.user-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.65rem 1rem;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  font-weight: 500;
+  transition: var(--transition);
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.user-dropdown-item:hover {
+  background: rgba(59, 130, 246, 0.1);
+  color: #FFFFFF;
+}
+
+.user-dropdown-item svg {
+  width: 16px;
+  height: 16px;
+  color: var(--steel-blue-light);
+  flex-shrink: 0;
+}
+
+.user-dropdown-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 0.4rem 0;
+}
+
+.user-dropdown-item.signout-btn {
+  color: #F87171;
+}
+
+.user-dropdown-item.signout-btn:hover {
+  background: rgba(239, 68, 68, 0.12);
+  color: #EF4444;
+}
+
+.user-dropdown-item.signout-btn svg {
+  color: #F87171;
 }
 
 .btn {
@@ -1827,6 +2044,119 @@ button, input, textarea, select {
 }
 
 /* ==========================================================================
+   Auth Modal Styling
+   ========================================================================== */
+.auth-modal-card {
+  max-width: 480px;
+  text-align: center;
+  padding: 2.5rem 2.25rem;
+}
+
+.auth-modal-icon-wrap {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid var(--border-active);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.25rem;
+  color: var(--steel-blue-light);
+  box-shadow: var(--shadow-glow);
+}
+
+.auth-modal-title {
+  font-family: var(--font-heading);
+  font-size: 1.85rem;
+  letter-spacing: 0.04em;
+  color: #FFFFFF;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.auth-modal-desc {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.auth-gating-banner {
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid var(--border-active);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.88rem;
+  color: #93C5FD;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  text-align: left;
+}
+
+.auth-gating-banner svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #60A5FA;
+}
+
+.auth-gating-banner.hidden {
+  display: none !important;
+}
+
+.btn-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  background: #FFFFFF;
+  color: #1F2937;
+  border: none;
+  padding: 0.85rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  width: 100%;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  margin-top: 0.5rem;
+}
+
+.btn-google:hover {
+  background: #F8FAFC;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.25);
+}
+
+.btn-google svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.auth-security-notice {
+  margin-top: 1.25rem;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
    Responsive Breakpoints
    ========================================================================== */
 @media (max-width: 1200px) {
@@ -1870,23 +2200,23 @@ button, input, textarea, select {
     height: 70px;
   }
   .nav-container {
-    gap: 0.5rem;
+    gap: 0.4rem;
   }
   .logo {
-    font-size: 1.35rem;
-    gap: 0.45rem;
+    font-size: 1.25rem;
+    gap: 0.35rem;
   }
   .logo-icon {
-    width: 26px;
-    height: 26px;
+    width: 24px;
+    height: 24px;
   }
   .nav-actions {
-    gap: 0.5rem;
+    gap: 0.4rem;
     flex-shrink: 0;
   }
   .nav-actions .btn {
-    padding: 0.42rem 0.85rem;
-    font-size: 0.78rem;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.03em;
     border-radius: 6px;
@@ -1894,12 +2224,40 @@ button, input, textarea, select {
     white-space: nowrap;
     box-shadow: 0 2px 8px rgba(255, 255, 255, 0.12);
   }
+  .nav-signin-btn {
+    padding: 0.4rem 0.65rem;
+    font-size: 0.75rem;
+    height: 36px;
+    gap: 0.35rem;
+  }
+  .nav-signin-btn .google-icon {
+    width: 14px;
+    height: 14px;
+  }
+  .user-avatar-btn {
+    height: 36px;
+    padding: 0.2rem 0.45rem 0.2rem 0.2rem;
+    gap: 0.35rem;
+  }
+  .user-avatar-img, .user-avatar-fallback {
+    width: 28px;
+    height: 28px;
+    font-size: 0.75rem;
+  }
+  .user-name-label {
+    max-width: 65px;
+    font-size: 0.75rem;
+  }
+  .user-dropdown-menu {
+    right: -20px;
+    width: 220px;
+  }
   .mobile-toggle {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
     padding: 0;
     border-radius: 6px;
     background: rgba(255, 255, 255, 0.05);
@@ -1909,8 +2267,8 @@ button, input, textarea, select {
     background: rgba(255, 255, 255, 0.12);
   }
   .mobile-toggle svg {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
   }
   .nav-links {
     position: fixed;
@@ -1988,38 +2346,60 @@ button, input, textarea, select {
     height: 64px;
   }
   .logo {
-    font-size: 1.15rem;
-    gap: 0.35rem;
+    font-size: 1.05rem;
+    gap: 0.25rem;
   }
   .logo-icon {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
   }
   .nav-actions {
-    gap: 0.4rem;
+    gap: 0.35rem;
   }
   .nav-actions .btn {
-    padding: 0.35rem 0.65rem;
-    font-size: 0.72rem;
+    padding: 0.32rem 0.55rem;
+    font-size: 0.7rem;
     height: 32px;
     letter-spacing: 0.02em;
   }
+  .nav-signin-btn {
+    padding: 0.32rem 0.5rem;
+    font-size: 0.7rem;
+    height: 32px;
+  }
+  .user-avatar-btn {
+    height: 32px;
+    padding: 0.15rem 0.35rem 0.15rem 0.15rem;
+  }
+  .user-avatar-img, .user-avatar-fallback {
+    width: 24px;
+    height: 24px;
+    font-size: 0.7rem;
+  }
+  .user-name-label {
+    max-width: 50px;
+    font-size: 0.7rem;
+  }
   .mobile-toggle {
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
   }
   .mobile-toggle svg {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
   }
 }
 
 @media (max-width: 360px) {
   .logo {
-    font-size: 1.02rem;
+    font-size: 0.95rem;
   }
   .nav-actions .btn {
-    padding: 0.3rem 0.48rem;
-    font-size: 0.66rem;
+    padding: 0.28rem 0.42rem;
+    font-size: 0.64rem;
+  }
+  .nav-signin-btn {
+    padding: 0.28rem 0.42rem;
+    font-size: 0.64rem;
   }
 }

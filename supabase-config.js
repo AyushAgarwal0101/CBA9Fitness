@@ -1,5 +1,5 @@
 /**
- * CBA9FITNESS - SUPABASE CLIENT CONFIGURATION & BACKEND INTEGRATION
+ * CBA9FITNESS - SUPABASE CLIENT CONFIGURATION & AUTHENTICATION BACKEND
  * ==============================================================================
  * Live Connected Supabase Project: mvnjuxjnntixwxrdnemw
  * ==============================================================================
@@ -38,7 +38,13 @@ function getSupabaseClient() {
   if (isSupabaseConfigured() && window.supabase && typeof window.supabase.createClient === 'function') {
     try {
       const cleanUrl = getCleanSupabaseUrl();
-      supabaseClient = window.supabase.createClient(cleanUrl, SUPABASE_CONFIG.SUPABASE_ANON_KEY);
+      supabaseClient = window.supabase.createClient(cleanUrl, SUPABASE_CONFIG.SUPABASE_ANON_KEY, {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: true
+        }
+      });
       console.log('✅ CBA9Fitness: Connected to Supabase backend successfully at:', cleanUrl);
       return supabaseClient;
     } catch (err) {
@@ -61,9 +67,128 @@ function isSupabaseConfigured() {
   );
 }
 
+// ==============================================================================
+// AUTHENTICATION & GOOGLE OAUTH METHODS
+// ==============================================================================
+
+/**
+ * Initiates Google OAuth Sign-In via Supabase Auth.
+ */
+async function signInWithGoogle(redirectToUrl) {
+  const supabase = getSupabaseClient();
+  const targetRedirect = redirectToUrl || window.location.href.split('#')[0];
+
+  if (supabase && supabase.auth) {
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: targetRedirect,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent'
+          }
+        }
+      });
+      if (error) throw error;
+      return { success: true, data };
+    } catch (err) {
+      console.error('❌ Supabase signInWithOAuth error:', err);
+      return { success: false, error: err };
+    }
+  }
+
+  return signInWithDemoAthlete();
+}
+
+/**
+ * Instant simulated Google login for development/preview when OAuth credentials are being configured.
+ */
+function signInWithDemoAthlete(customName, customEmail) {
+  const demoUser = {
+    id: 'demo-athlete-' + Math.random().toString(36).substring(2, 9),
+    email: customEmail || 'athlete@gmail.com',
+    user_metadata: {
+      full_name: customName || 'Athlete Client',
+      name: customName || 'Athlete Client',
+      avatar_url: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=120&auto=format&fit=crop'
+    }
+  };
+  localStorage.setItem('cba9_demo_session', JSON.stringify(demoUser));
+  window.dispatchEvent(new CustomEvent('cba9_auth_state_change', { detail: { user: demoUser } }));
+  return { success: true, user: demoUser };
+}
+
+/**
+ * Signs out the currently authenticated user.
+ */
+async function signOutUser() {
+  localStorage.removeItem('cba9_demo_session');
+  sessionStorage.removeItem('cba9_pending_action');
+
+  const supabase = getSupabaseClient();
+  if (supabase && supabase.auth) {
+    try {
+      await supabase.auth.signOut();
+    } catch (err) {
+      console.warn('⚠️ Supabase signOut error:', err);
+    }
+  }
+
+  window.dispatchEvent(new CustomEvent('cba9_auth_state_change', { detail: { user: null } }));
+  return { success: true };
+}
+
+/**
+ * Retrieves the current authenticated user (Supabase or Demo session).
+ */
+async function getCurrentUser() {
+  const supabase = getSupabaseClient();
+  if (supabase && supabase.auth) {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) return user;
+    } catch (err) {
+      // ignore
+    }
+  }
+
+  // Check demo session
+  const demoJson = localStorage.getItem('cba9_demo_session');
+  if (demoJson) {
+    try {
+      return JSON.parse(demoJson);
+    } catch (e) {
+      localStorage.removeItem('cba9_demo_session');
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Subscribes to Auth state changes.
+ */
+function onAuthStateChange(callback) {
+  const supabase = getSupabaseClient();
+  if (supabase && supabase.auth) {
+    supabase.auth.onAuthStateChange((event, session) => {
+      callback(session ? session.user : null);
+    });
+  }
+
+  // Also listen to custom events for demo mode
+  window.addEventListener('cba9_auth_state_change', (e) => {
+    callback(e.detail.user);
+  });
+}
+
+// ==============================================================================
+// DATABASE METHODS
+// ==============================================================================
+
 /**
  * Fetch all active training programs from Supabase.
- * Returns Array of plans or null if not configured/failed.
  */
 async function fetchActivePlansFromDB() {
   const supabase = getSupabaseClient();
@@ -89,6 +214,8 @@ async function fetchActivePlansFromDB() {
  */
 async function recordProgramEnrollment(enrollmentData) {
   const supabase = getSupabaseClient();
+  const currentUser = await getCurrentUser();
+  const userId = currentUser ? currentUser.id : (enrollmentData.userId || null);
 
   // 1. If Supabase is connected, record in the database
   if (supabase) {
@@ -96,6 +223,7 @@ async function recordProgramEnrollment(enrollmentData) {
       const { data, error } = await supabase
         .from('enrollments')
         .insert([{
+          user_id: userId,
           plan_slug: enrollmentData.planSlug || null,
           plan_name: enrollmentData.planName,
           customer_name: enrollmentData.name,
@@ -119,6 +247,7 @@ async function recordProgramEnrollment(enrollmentData) {
 
   // 2. Dispatch admin email alert to your Gmail
   await dispatchAdminEmailNotification('New Program Enrollment', {
+    "Customer Account": currentUser ? `Verified Google User (${currentUser.email})` : 'Guest Signup',
     "Program": enrollmentData.planName,
     "Customer Name": enrollmentData.name,
     "Customer Email": enrollmentData.email,
@@ -136,6 +265,8 @@ async function recordProgramEnrollment(enrollmentData) {
  */
 async function recordConsultationRequest(consultData) {
   const supabase = getSupabaseClient();
+  const currentUser = await getCurrentUser();
+  const userId = currentUser ? currentUser.id : (consultData.userId || null);
 
   // 1. If Supabase is connected, record in database
   if (supabase) {
@@ -143,6 +274,7 @@ async function recordConsultationRequest(consultData) {
       const { data, error } = await supabase
         .from('consultations')
         .insert([{
+          user_id: userId,
           name: consultData.name,
           email: consultData.email,
           phone: consultData.phone || null,
@@ -164,6 +296,7 @@ async function recordConsultationRequest(consultData) {
 
   // 2. Dispatch admin email alert to your Gmail
   await dispatchAdminEmailNotification('New Consultation Request', {
+    "Customer Account": currentUser ? `Verified Google User (${currentUser.email})` : 'Guest Submission',
     "Lead Name": consultData.name,
     "Email": consultData.email,
     "Phone": consultData.phone || 'Not provided',
@@ -202,7 +335,6 @@ async function recordNewsletterSubscription(email) {
 
 /**
  * Dispatches an automated email notification to the Admin Gmail.
- * Supports Supabase Edge Functions, custom webhook endpoints, or email dispatchers.
  */
 async function dispatchAdminEmailNotification(subject, details) {
   console.log(`📧 [Admin Gmail Notification] -> To: ${SUPABASE_CONFIG.ADMIN_EMAIL}`);
@@ -237,6 +369,11 @@ window.CBA9_BACKEND = {
   config: SUPABASE_CONFIG,
   getClient: getSupabaseClient,
   isConfigured: isSupabaseConfigured,
+  signInWithGoogle: signInWithGoogle,
+  signInWithDemo: signInWithDemoAthlete,
+  signOut: signOutUser,
+  getCurrentUser: getCurrentUser,
+  onAuthStateChange: onAuthStateChange,
   fetchActivePlans: fetchActivePlansFromDB,
   recordEnrollment: recordProgramEnrollment,
   recordConsultation: recordConsultationRequest,

@@ -34,8 +34,21 @@
         <li><a href="transformations.html" class="nav-link">Community</a></li>
       </ul>
 
-      <!-- Right Action CTA -->
+      <!-- Right Action CTA & Customer Auth -->
       <div class="nav-actions">
+        <!-- Dynamic Customer Auth Profile / Login Button -->
+        <div id="navAuthContainer" class="nav-auth-container">
+          <button id="navSignInBtn" class="nav-signin-btn auth-modal-trigger" aria-label="Sign In with Google">
+            <svg class="google-icon" viewBox="0 0 24 24" width="16" height="16">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+            </svg>
+            <span>Login</span>
+          </button>
+        </div>
+
         <a href="#consultModal" class="btn btn-white consult-modal-trigger">Start Here</a>
         <button class="mobile-toggle" aria-label="Toggle Navigation">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
@@ -450,6 +463,137 @@
         </div>
         <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.9rem;">Confirm Booking</button>
       </form>
+    </div>
+  </div>
+
+  <!-- Interactive Plan Detail Modal -->
+  <div id="planModal" class="modal-backdrop">
+    <div class="modal-card">
+      <button class="modal-close-btn modal-close-trigger" aria-label="Close modal">✕</button>
+      <div id="planModalCategory" class="section-tag" style="margin-bottom: 0.5rem;">Training Program</div>
+      <h3 id="planModalTitle" style="font-family: var(--font-heading); font-size: 2.1rem; color: #FFFFFF; line-height: 1.1; margin-bottom: 0.75rem;">Program Name</h3>
+      
+      <div style="display: flex; gap: 1rem; margin-bottom: 1.25rem; font-size: 0.88rem; color: var(--text-secondary);">
+        <div><strong>Duration:</strong> <span id="planModalDuration">12 Weeks</span></div>
+        <div>•</div>
+        <div><strong>Level:</strong> <span id="planModalDifficulty">Intermediate</span></div>
+        <div>•</div>
+        <div><strong>Badge:</strong> <span id="planModalPricing">$149</span></div>
+      </div>
+
+      <p id="planModalDesc" style="font-size: 1rem; color: #CBD5E1; line-height: 1.6; margin-bottom: 1.5rem;"></p>
+
+      <div style="border-top: 1px solid var(--border-subtle); padding-top: 1.25rem; margin-bottom: 1.5rem;">
+        <h4 style="font-family: var(--font-heading); font-size: 1.2rem; color: #FFFFFF; margin-bottom: 0.75rem; text-transform: uppercase;">What's Included:</h4>
+        <ul id="planModalFeatures" style="list-style: none; padding: 0;">
+          <!-- Injected via JavaScript -->
+        </ul>
+      </div>
+
+      <div style="display: flex; gap: 1rem;">
+        <button type="button" id="planModalEnrollBtn" class="btn btn-primary" style="flex: 1;">Enroll In Plan</button>
+        <button class="btn btn-outline modal-close-trigger">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Program Enrollment Modal (When customer joins a program) -->
+  <div id="enrollModal" class="modal-backdrop">
+    <div class="modal-card">
+      <button class="modal-close-btn modal-close-trigger" aria-label="Close modal">✕</button>
+      <div class="section-tag" style="margin-bottom: 0.5rem;">Join Program</div>
+      <h3 style="font-family: var(--font-heading); font-size: 2rem; color: #FFFFFF; margin-bottom: 0.3rem;" id="enrollModalTitle">ENROLL IN PROGRAM</h3>
+      <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Lock in your spot. Complete this form to record your enrollment and start your periodized training protocol.</p>
+      
+      <form id="enrollForm">
+        <input type="hidden" id="enrollPlanName" name="planName" value="">
+        <input type="hidden" id="enrollPlanSlug" name="planSlug" value="">
+
+        <div class="form-group">
+          <label class="form-label" for="enrollName">Full Name</label>
+          <input type="text" id="enrollName" class="form-input" placeholder="e.g. Alex Hunter" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="enrollEmail">Email Address (for plan access)</label>
+          <input type="email" id="enrollEmail" class="form-input" placeholder="alex@example.com" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="enrollPhone">Phone Number / WhatsApp</label>
+          <input type="tel" id="enrollPhone" class="form-input" placeholder="+91 98765 43210">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="enrollFitnessLevel">Current Experience Level</label>
+          <select id="enrollFitnessLevel" class="form-select">
+            <option value="Beginner (< 1 Year)">Beginner (&lt; 1 Year)</option>
+            <option value="Intermediate (1-3 Years)" selected>Intermediate (1-3 Years)</option>
+            <option value="Advanced (3+ Years)">Advanced (3+ Years)</option>
+            <option value="Elite Athlete">Elite Athlete</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="enrollGoal">Primary Focus</label>
+          <select id="enrollGoal" class="form-select">
+            <option>Hypertrophy & Muscle Growth</option>
+            <option>Maximal Strength & PRs</option>
+            <option>Accelerated Fat Loss</option>
+            <option>Athletic Conditioning & Agility</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="enrollNotes">Additional Notes / Injuries / Equipment Access</label>
+          <textarea id="enrollNotes" class="form-textarea" placeholder="Commercial gym access, past injuries, special requirements..." rows="3"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.95rem; font-size: 1rem;">Confirm Enrollment & Submit</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Athlete Google Auth / Sign-In Modal -->
+  <div class="modal-backdrop" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+    <div class="modal-card auth-modal-card">
+      <button class="modal-close-btn modal-close-trigger" aria-label="Close Modal">&times;</button>
+      
+      <div class="auth-modal-icon-wrap">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <polyline points="16 11 18 13 22 9"></polyline>
+        </svg>
+      </div>
+
+      <h2 class="auth-modal-title" id="authModalTitle">Athlete Sign In</h2>
+      <p class="auth-modal-desc" id="authModalDesc">
+        Sign in with your Google account to book strategy calls, enroll in elite training programs, and track your fitness progress.
+      </p>
+
+      <div class="auth-gating-banner hidden" id="authGatingBanner">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+        <span id="authGatingMsg">Please sign in with Google to book your free consultation.</span>
+      </div>
+
+      <!-- Google OAuth Button -->
+      <button class="btn-google" id="googleSignInBtn" type="button">
+        <svg viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+        </svg>
+        <span>Continue with Google</span>
+      </button>
+
+      <p class="auth-security-notice">
+        ⚡ <strong>Secure Instant Access:</strong> We use official Google authentication. Your session is protected and encrypted.
+      </p>
     </div>
   </div>
 

@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS public.training_plans (
 -- ==============================================================================
 CREATE TABLE IF NOT EXISTS public.enrollments (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   plan_slug VARCHAR(100),
   plan_name VARCHAR(255) NOT NULL,
   customer_name VARCHAR(255) NOT NULL,
@@ -53,6 +54,7 @@ CREATE TABLE IF NOT EXISTS public.enrollments (
 -- ==============================================================================
 CREATE TABLE IF NOT EXISTS public.consultations (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   name VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL,
   phone VARCHAR(50),
@@ -97,10 +99,16 @@ CREATE POLICY "Admins full access to training plans"
   WITH CHECK (true);
 
 -- 6.2 enrollments policies
-CREATE POLICY "Public can submit program enrollments" 
+CREATE POLICY "Public and users can submit program enrollments" 
   ON public.enrollments 
   FOR INSERT 
   WITH CHECK (true);
+
+CREATE POLICY "Users can view their own enrollments" 
+  ON public.enrollments 
+  FOR SELECT 
+  TO authenticated 
+  USING (auth.uid() = user_id);
 
 CREATE POLICY "Admins full access to enrollments" 
   ON public.enrollments 
@@ -110,10 +118,16 @@ CREATE POLICY "Admins full access to enrollments"
   WITH CHECK (true);
 
 -- 6.3 consultations policies
-CREATE POLICY "Public can submit consultation requests" 
+CREATE POLICY "Public and users can submit consultation requests" 
   ON public.consultations 
   FOR INSERT 
   WITH CHECK (true);
+
+CREATE POLICY "Users can view their own consultations" 
+  ON public.consultations 
+  FOR SELECT 
+  TO authenticated 
+  USING (auth.uid() = user_id);
 
 CREATE POLICY "Admins full access to consultations" 
   ON public.consultations 
