@@ -58,6 +58,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 80px;
   color-scheme: dark;
 }
 
@@ -103,20 +104,56 @@ button, input, textarea, select {
   padding-right: 1.5rem;
 }
 
+/* Section Containers for Connected Flow */
+.section-container {
+  padding: 5rem 0;
+  border-top: 1px solid var(--border-subtle);
+  position: relative;
+  overflow: hidden;
+}
+
+.section-ambient-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.metrics-bar {
+  padding: 3.5rem 0;
+  background-color: var(--bg-surface);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.metric-number {
+  font-family: var(--font-heading);
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--steel-blue-light);
+  line-height: 1;
+}
+
+.metric-label {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-top: 0.35rem;
+}
+
 /* ==========================================================================
-   Navigation Bar
+   Navigation Bar / Docker
    ========================================================================== */
 .navbar {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(7, 11, 18, 0.9);
+  background: rgba(7, 11, 18, 0.92);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border-subtle);
   height: 80px;
   display: flex;
   align-items: center;
+  transition: var(--transition);
 }
 
 .nav-container {
@@ -161,6 +198,7 @@ button, input, textarea, select {
   color: var(--text-secondary);
   position: relative;
   padding: 0.3rem 0;
+  cursor: pointer;
 }
 
 .nav-link:hover, .nav-link.active {
@@ -247,7 +285,7 @@ button, input, textarea, select {
 }
 
 /* ==========================================================================
-   Hero Section (Home Page)
+   Hero Section
    ========================================================================== */
 .hero-section {
   position: relative;
@@ -315,7 +353,7 @@ button, input, textarea, select {
   margin-bottom: 0.75rem;
 }
 
-/* Hero Center Athlete Visual */
+/* Center Athlete Visual */
 .hero-centerpiece {
   position: relative;
   display: flex;
@@ -421,7 +459,6 @@ button, input, textarea, select {
   transform: translateY(-4px);
 }
 
-/* White Cards */
 .card-white {
   background-color: var(--white-card-bg);
   color: var(--white-card-text);
@@ -495,7 +532,6 @@ button, input, textarea, select {
   object-fit: cover;
 }
 
-/* Photo Card (Rope Training) */
 .card-photo {
   height: 165px;
   position: relative;
@@ -535,19 +571,12 @@ button, input, textarea, select {
 }
 
 /* ==========================================================================
-   Page Headers & Common Section Styles
+   Section Headers & Common Titles
    ========================================================================== */
 .page-header {
-  padding: 4.5rem 0 2.5rem;
+  padding: 2.5rem 0 2.5rem;
   text-align: center;
   position: relative;
-}
-
-.page-header-bg {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.15) 0%, transparent 60%);
-  pointer-events: none;
 }
 
 .section-tag {
@@ -568,7 +597,7 @@ button, input, textarea, select {
 
 .page-title {
   font-family: var(--font-heading);
-  font-size: clamp(2.5rem, 5vw, 4.2rem);
+  font-size: clamp(2.5rem, 5vw, 3.8rem);
   font-weight: 700;
   letter-spacing: 0.03em;
   line-height: 1.05;
@@ -578,163 +607,14 @@ button, input, textarea, select {
 }
 
 .page-subtitle {
-  font-size: 1.15rem;
+  font-size: 1.12rem;
   color: var(--text-secondary);
   max-width: 620px;
   margin: 0 auto;
 }
 
 /* ==========================================================================
-   Page 2: Why Trust Us (Transformations)
-   ========================================================================== */
-.transformations-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-  gap: 2rem;
-  padding-bottom: 5rem;
-}
-
-.trans-card {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-card);
-  transition: var(--transition);
-  display: flex;
-  flex-direction: column;
-}
-
-.trans-card:hover {
-  transform: translateY(-5px);
-  border-color: var(--border-active);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), var(--shadow-glow);
-}
-
-.trans-images-split {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  position: relative;
-  height: 260px;
-  background: #000000;
-}
-
-.trans-img-box {
-  position: relative;
-  height: 100%;
-  overflow: hidden;
-}
-
-.trans-img-box img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.4s ease;
-}
-
-.trans-card:hover .trans-img-box img {
-  transform: scale(1.04);
-}
-
-.img-badge {
-  position: absolute;
-  top: 0.75rem;
-  padding: 0.25rem 0.65rem;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  border-radius: var(--radius-sm);
-  backdrop-filter: blur(8px);
-}
-
-.badge-before {
-  left: 0.75rem;
-  background: rgba(15, 23, 42, 0.85);
-  color: #CBD5E1;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.badge-after {
-  right: 0.75rem;
-  background: var(--steel-blue);
-  color: #FFFFFF;
-  box-shadow: 0 2px 8px var(--steel-glow);
-}
-
-.trans-divider {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 2px;
-  background: rgba(255, 255, 255, 0.25);
-  transform: translateX(-50%);
-  z-index: 3;
-}
-
-.trans-divider-icon {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 26px;
-  height: 26px;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-active);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.65rem;
-  color: var(--steel-blue-light);
-  z-index: 4;
-}
-
-.trans-body {
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.trans-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.75rem;
-}
-
-.client-name {
-  font-family: var(--font-heading);
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: #FFFFFF;
-}
-
-.program-duration {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--steel-blue-light);
-  background: rgba(59, 130, 246, 0.12);
-  padding: 0.25rem 0.65rem;
-  border-radius: var(--radius-full);
-  border: 1px solid rgba(59, 130, 246, 0.25);
-}
-
-.trans-quote {
-  font-size: 0.95rem;
-  color: #E2E8F0;
-  line-height: 1.5;
-  font-style: italic;
-  position: relative;
-  padding-left: 0.85rem;
-  border-left: 2px solid var(--steel-blue);
-  margin-top: auto;
-}
-
-/* ==========================================================================
-   Page 3: Training Plans
+   Section 2: Training Plans
    ========================================================================== */
 .plans-filter-bar {
   display: flex;
@@ -773,7 +653,7 @@ button, input, textarea, select {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
-  padding-bottom: 5rem;
+  padding-bottom: 2rem;
 }
 
 .plan-card {
@@ -906,14 +786,14 @@ button, input, textarea, select {
 }
 
 /* ==========================================================================
-   Page 4: Meet the Coach & Contact
+   Section 3: Meet the Coach & Contact
    ========================================================================== */
 .coach-hero-grid {
   display: grid;
   grid-template-columns: 1fr 1.15fr;
   gap: 3.5rem;
   align-items: center;
-  padding: 2rem 0 4.5rem;
+  padding: 1rem 0 3.5rem;
 }
 
 .coach-photo-card {
@@ -922,7 +802,7 @@ button, input, textarea, select {
   overflow: hidden;
   border: 1px solid var(--border-subtle);
   box-shadow: var(--shadow-card), var(--shadow-glow);
-  height: 520px;
+  height: 500px;
 }
 
 .coach-photo-card img {
@@ -1080,7 +960,7 @@ button, input, textarea, select {
 
 /* Contact & Booking Section */
 .contact-section {
-  padding: 4rem 0 5rem;
+  padding: 3.5rem 0 2rem;
   border-top: 1px solid var(--border-subtle);
 }
 
@@ -1154,7 +1034,6 @@ button, input, textarea, select {
   transform: translateY(-2px);
 }
 
-/* Form Styles */
 .contact-form-card {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
@@ -1198,6 +1077,155 @@ button, input, textarea, select {
 .form-textarea {
   min-height: 120px;
   resize: vertical;
+}
+
+/* ==========================================================================
+   Section 4: Community & Transformations
+   ========================================================================== */
+.transformations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 2rem;
+  padding-bottom: 3.5rem;
+}
+
+.trans-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+}
+
+.trans-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--border-active);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), var(--shadow-glow);
+}
+
+.trans-images-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+  height: 260px;
+  background: #000000;
+}
+
+.trans-img-box {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+
+.trans-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.trans-card:hover .trans-img-box img {
+  transform: scale(1.04);
+}
+
+.img-badge {
+  position: absolute;
+  top: 0.75rem;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: var(--radius-sm);
+  backdrop-filter: blur(8px);
+}
+
+.badge-before {
+  left: 0.75rem;
+  background: rgba(15, 23, 42, 0.85);
+  color: #CBD5E1;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.badge-after {
+  right: 0.75rem;
+  background: var(--steel-blue);
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px var(--steel-glow);
+}
+
+.trans-divider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateX(-50%);
+  z-index: 3;
+}
+
+.trans-divider-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 26px;
+  height: 26px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-active);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  color: var(--steel-blue-light);
+  z-index: 4;
+}
+
+.trans-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.trans-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.client-name {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.program-duration {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--steel-blue-light);
+  background: rgba(59, 130, 246, 0.12);
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+}
+
+.trans-quote {
+  font-size: 0.95rem;
+  color: #E2E8F0;
+  line-height: 1.5;
+  font-style: italic;
+  position: relative;
+  padding-left: 0.85rem;
+  border-left: 2px solid var(--steel-blue);
+  margin-top: auto;
 }
 
 /* ==========================================================================

@@ -8,12 +8,12 @@
   <!-- Favicon / Meta -->
   <meta name="description" content="Build lasting strength with personalized workouts, smart tracking, and expert guidance tailored to your goals at CBA9Fitness.">
 </head>
-<body>
+<body id="home">
 
-  <!-- Top Navigation Bar -->
+  <!-- Top Sticky Navigation Bar / Docker -->
   <header class="navbar">
     <div class="container nav-container">
-      <a href="index.html" class="logo">
+      <a href="#home" class="logo">
         <span class="logo-icon">
           <!-- Dumbbell SVG -->
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -29,11 +29,11 @@
         CBA9FITNESS
       </a>
 
-      <!-- Center Nav Links -->
+      <!-- Center Smooth Scroll Nav Links -->
       <ul class="nav-links">
-        <li><a href="plans.html" class="nav-link">Programs</a></li>
-        <li><a href="coach.html" class="nav-link">Trainers</a></li>
-        <li><a href="transformations.html" class="nav-link">Community</a></li>
+        <li><a href="#programs" class="nav-link" data-section="programs">Programs</a></li>
+        <li><a href="#trainers" class="nav-link" data-section="trainers">Trainers</a></li>
+        <li><a href="#community" class="nav-link" data-section="community">Community</a></li>
       </ul>
 
       <!-- Right Action CTA -->
@@ -46,13 +46,15 @@
     </div>
   </header>
 
-  <!-- Page 1 Hero Section -->
   <main>
-    <section class="hero-section">
+    <!-- ==========================================================================
+         SECTION 1: HERO / LANDING PAGE
+         ========================================================================== -->
+    <section class="hero-section" id="hero">
       <div class="hero-bg-overlay"></div>
       
       <div class="container hero-content">
-        <!-- Top Row: Condensed Big Headline & Supporting Text -->
+        <!-- Top Row: Condensed Headline & Supporting Text -->
         <div class="hero-top-row">
           <h1 class="hero-headline">
             SHAPE YOUR FUTURE <br>THROUGH <span class="highlight">FITNESS</span>
@@ -89,7 +91,7 @@
               <div class="treadmill-thumb">
                 <img src="https://images.unsplash.com/photo-1576678927484-cc907957088c?q=80&w=400&auto=format&fit=crop" alt="Treadmill cardio training">
               </div>
-              <a href="transformations.html" class="card-link" style="margin-top: 0.5rem;">
+              <a href="#community" class="card-link" style="margin-top: 0.5rem;">
                 See Stories 
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
               </a>
@@ -102,7 +104,7 @@
                 <h3 class="card-title">Personalized Workout Plans</h3>
               </div>
               <p style="font-size: 0.85rem; color: #475569; margin: 0.2rem 0 0.5rem;">Customized sets, reps, and macro splits built for your physiology.</p>
-              <a href="plans.html" class="card-link">
+              <a href="#programs" class="card-link">
                 Learn More 
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
               </a>
@@ -121,25 +123,729 @@
       </div>
     </section>
 
-    <!-- Quick Highlights Section (Simple & Clean) -->
-    <section style="padding: 4.5rem 0; background-color: var(--bg-surface); border-top: 1px solid var(--border-subtle);">
-      <div class="container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 2rem; text-align: center;">
+    <!-- Quick Highlights / Metric Bar -->
+    <section class="metrics-bar">
+      <div class="container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; text-align: center;">
         <div>
-          <div style="font-family: var(--font-heading); font-size: 2.8rem; font-weight: 700; color: var(--steel-blue-light);">100%</div>
-          <p style="font-size: 0.95rem; color: var(--text-secondary); margin-top: 0.25rem;">Customized Workout Protocols</p>
+          <div class="metric-number">100%</div>
+          <p class="metric-label">Customized Workout Protocols</p>
         </div>
         <div>
-          <div style="font-family: var(--font-heading); font-size: 2.8rem; font-weight: 700; color: #FFFFFF;">50,000+</div>
-          <p style="font-size: 0.95rem; color: var(--text-secondary); margin-top: 0.25rem;">Transformations Achieved</p>
+          <div class="metric-number" style="color: #FFFFFF;">50,000+</div>
+          <p class="metric-label">Transformations Achieved</p>
         </div>
         <div>
-          <div style="font-family: var(--font-heading); font-size: 2.8rem; font-weight: 700; color: var(--steel-blue-light);">12+ YRS</div>
-          <p style="font-size: 0.95rem; color: var(--text-secondary); margin-top: 0.25rem;">Proven Elite Coaching</p>
+          <div class="metric-number">12+ YRS</div>
+          <p class="metric-label">Proven Elite Coaching</p>
         </div>
         <div>
-          <div style="font-family: var(--font-heading); font-size: 2.8rem; font-weight: 700; color: #FFFFFF;">24/7</div>
-          <p style="font-size: 0.95rem; color: var(--text-secondary); margin-top: 0.25rem;">Dedicated Trainer Support</p>
+          <div class="metric-number" style="color: #FFFFFF;">24/7</div>
+          <p class="metric-label">Dedicated Trainer Support</p>
         </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 2: PROGRAMS / TRAINING PLANS (Continuous Flow)
+         ========================================================================== -->
+    <section id="programs" class="section-container">
+      <div class="section-ambient-bg"></div>
+      
+      <div class="container">
+        <!-- Section Header -->
+        <div class="page-header" style="padding-top: 2rem;">
+          <div class="section-tag">Targeted Protocols</div>
+          <h2 class="page-title">TRAINING PLANS FOR EVERY GOAL</h2>
+          <p class="page-subtitle">Select your objective to unlock precision periodization, progressive overload tracking, and nutrition synergy.</p>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="plans-filter-bar">
+          <button class="filter-btn active" data-category="all">All Plans</button>
+          <button class="filter-btn" data-category="strength">Strength Building</button>
+          <button class="filter-btn" data-category="fatloss">Fat Loss</button>
+          <button class="filter-btn" data-category="hypertrophy">Muscle Gain</button>
+          <button class="filter-btn" data-category="beginner">Beginner Friendly</button>
+          <button class="filter-btn" data-category="athletic">Athletic Performance</button>
+        </div>
+
+        <!-- 3-Column Plans Grid -->
+        <div class="plans-grid">
+
+          <!-- Plan 1: Iron Titan (Strength Building) -->
+          <div class="plan-card featured" 
+               data-category="strength"
+               data-name="Iron Titan Heavy Strength"
+               data-category-label="Strength Building"
+               data-duration="12 Weeks"
+               data-difficulty="Advanced"
+               data-price="$149 • 48 Sessions"
+               data-desc="Master raw power with heavy barbell compounds, RPE pacing, and specialized nervous system recovery cycles."
+               data-features="4 Heavy Days/Week|Video Barbell Technique Breakdown|1RM Periodization Sheet|Dedicated Deload Protocols">
+            <div class="featured-pill">Most Popular</div>
+            <div class="plan-header">
+              <div class="plan-icon-wrapper">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 5v14M18 5v14M2 9v6M22 9v6M6 12h12M2 12h4M18 12h4"/>
+                </svg>
+              </div>
+              <span class="plan-badge">48 Sessions</span>
+            </div>
+            <h3 class="plan-name">Iron Titan Heavy Strength</h3>
+            <div class="plan-tags">
+              <span class="plan-tag">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                12 Weeks
+              </span>
+              <span class="plan-tag" style="color: #F87171;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                Advanced
+              </span>
+            </div>
+            <p class="plan-desc">Master raw power with heavy barbell compounds, RPE pacing, and specialized nervous system recovery cycles.</p>
+            <div class="plan-footer">
+              <div class="plan-pricing">
+                <span class="pricing-amount">$149</span>
+                <span class="pricing-sub">Full Program Access</span>
+              </div>
+              <button class="btn btn-primary view-plan-trigger" style="padding: 0.6rem 1.1rem; font-size: 0.85rem;">View Plan</button>
+            </div>
+          </div>
+
+          <!-- Plan 2: Metabolic Shred (Fat Loss) -->
+          <div class="plan-card" 
+               data-category="fatloss"
+               data-name="Metabolic Shred 360"
+               data-category-label="Fat Loss"
+               data-duration="8 Weeks"
+               data-difficulty="Intermediate"
+               data-price="$119 • 32 Sessions"
+               data-desc="High-density lactate training combined with conditioning to rapidly incinerate body fat while preserving lean muscle."
+               data-features="5 Days/Week Hybrid Splits|Caloric Deficit Meal Blueprint|Heart Rate Zone Guides|Cardio Progression Ladder">
+            <div class="plan-header">
+              <div class="plan-icon-wrapper">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
+                </svg>
+              </div>
+              <span class="plan-badge">32 Sessions</span>
+            </div>
+            <h3 class="plan-name">Metabolic Shred 360</h3>
+            <div class="plan-tags">
+              <span class="plan-tag">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                8 Weeks
+              </span>
+              <span class="plan-tag" style="color: #FBBF24;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                Intermediate
+              </span>
+            </div>
+            <p class="plan-desc">High-density lactate training combined with conditioning to rapidly incinerate body fat while preserving lean muscle.</p>
+            <div class="plan-footer">
+              <div class="plan-pricing">
+                <span class="pricing-amount">$119</span>
+                <span class="pricing-sub">Full Program Access</span>
+              </div>
+              <button class="btn btn-outline view-plan-trigger" style="padding: 0.6rem 1.1rem; font-size: 0.85rem;">View Plan</button>
+            </div>
+          </div>
+
+          <!-- Plan 3: Hypertrophy Matrix (Muscle Gain) -->
+          <div class="plan-card" 
+               data-category="hypertrophy"
+               data-name="Hypertrophy Matrix Volume"
+               data-category-label="Muscle Gain"
+               data-duration="16 Weeks"
+               data-difficulty="Intermediate - Advanced"
+               data-price="$169 • 64 Sessions"
+               data-desc="Scientific hypertrophy with optimal weekly volume per muscle group, tempo controls, and progressive mechanical tension."
+               data-features="Push/Pull/Legs 6-Day Split|Hypertrophy Volume Calculator|Rest-Pause & Drop Set Guidelines|Targeted Arm & Shoulder Specialization">
+            <div class="plan-header">
+              <div class="plan-icon-wrapper">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+                  <path d="M6 12h12"></path>
+                </svg>
+              </div>
+              <span class="plan-badge">64 Sessions</span>
+            </div>
+            <h3 class="plan-name">Hypertrophy Matrix Volume</h3>
+            <div class="plan-tags">
+              <span class="plan-tag">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                16 Weeks
+              </span>
+              <span class="plan-tag" style="color: #60A5FA;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                Intermediate
+              </span>
+            </div>
+            <p class="plan-desc">Scientific hypertrophy with optimal weekly volume per muscle group, tempo controls, and progressive mechanical tension.</p>
+            <div class="plan-footer">
+              <div class="plan-pricing">
+                <span class="pricing-amount">$169</span>
+                <span class="pricing-sub">Full Program Access</span>
+              </div>
+              <button class="btn btn-outline view-plan-trigger" style="padding: 0.6rem 1.1rem; font-size: 0.85rem;">View Plan</button>
+            </div>
+          </div>
+
+          <!-- Plan 4: Foundation Zero (Beginner Friendly) -->
+          <div class="plan-card" 
+               data-category="beginner"
+               data-name="Foundation Zero: Intro to Lifting"
+               data-category-label="Beginner Friendly"
+               data-duration="6 Weeks"
+               data-difficulty="Beginner"
+               data-price="$89 • 18 Sessions"
+               data-desc="Step-by-step introduction to resistance training, injury prevention, core bracing, and establishing bulletproof exercise habits."
+               data-features="3 Full-Body Days/Week|Joint Mobility Warm-ups|Form Check Checklists|Equipment 101 Video Vault">
+            <div class="plan-header">
+              <div class="plan-icon-wrapper">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+              </div>
+              <span class="plan-badge">18 Sessions</span>
+            </div>
+            <h3 class="plan-name">Foundation Zero: Intro to Lifting</h3>
+            <div class="plan-tags">
+              <span class="plan-tag">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                6 Weeks
+              </span>
+              <span class="plan-tag" style="color: #34D399;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                Beginner
+              </span>
+            </div>
+            <p class="plan-desc">Step-by-step introduction to resistance training, injury prevention, core bracing, and establishing exercise habits.</p>
+            <div class="plan-footer">
+              <div class="plan-pricing">
+                <span class="pricing-amount">$89</span>
+                <span class="pricing-sub">Full Program Access</span>
+              </div>
+              <button class="btn btn-outline view-plan-trigger" style="padding: 0.6rem 1.1rem; font-size: 0.85rem;">View Plan</button>
+            </div>
+          </div>
+
+          <!-- Plan 5: Apex Athlete (Athletic Performance) -->
+          <div class="plan-card" 
+               data-category="athletic"
+               data-name="Apex Athletic Performance"
+               data-category-label="Athletic Performance"
+               data-duration="12 Weeks"
+               data-difficulty="Advanced"
+               data-price="$159 • 40 Sessions"
+               data-desc="Enhance vertical jump, rotational power, sprint mechanics, and multi-directional agility for competitive sports."
+               data-features="Plyometric Shock Training|Sprint & Deceleration Drills|Rotational Power Complexes|Recovery & Agility Testing">
+            <div class="plan-header">
+              <div class="plan-icon-wrapper">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+              </div>
+              <span class="plan-badge">40 Sessions</span>
+            </div>
+            <h3 class="plan-name">Apex Athletic Performance</h3>
+            <div class="plan-tags">
+              <span class="plan-tag">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                12 Weeks
+              </span>
+              <span class="plan-tag" style="color: #F87171;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                Advanced
+              </span>
+            </div>
+            <p class="plan-desc">Enhance vertical jump, rotational power, sprint mechanics, and multi-directional agility for competitive sports.</p>
+            <div class="plan-footer">
+              <div class="plan-pricing">
+                <span class="pricing-amount">$159</span>
+                <span class="pricing-sub">Full Program Access</span>
+              </div>
+              <button class="btn btn-outline view-plan-trigger" style="padding: 0.6rem 1.1rem; font-size: 0.85rem;">View Plan</button>
+            </div>
+          </div>
+
+          <!-- Plan 6: Functional Longevity (Beginner / All) -->
+          <div class="plan-card" 
+               data-category="beginner"
+               data-name="Functional Longevity & Mobility"
+               data-category-label="Beginner Friendly"
+               data-duration="10 Weeks"
+               data-difficulty="All Levels"
+               data-price="$99 • 30 Sessions"
+               data-desc="Eliminate joint pain, restore hip/shoulder mobility, and build functional core endurance for lifelong wellness."
+               data-features="Daily 15-Min Mobility Flows|Postural Restoration Workouts|Low-Impact Strength Circuits|Joint Decompression Protocols">
+            <div class="plan-header">
+              <div class="plan-icon-wrapper">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+              </div>
+              <span class="plan-badge">30 Sessions</span>
+            </div>
+            <h3 class="plan-name">Functional Longevity & Mobility</h3>
+            <div class="plan-tags">
+              <span class="plan-tag">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                10 Weeks
+              </span>
+              <span class="plan-tag" style="color: #34D399;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                All Levels
+              </span>
+            </div>
+            <p class="plan-desc">Eliminate joint pain, restore hip/shoulder mobility, and build functional core endurance for lifelong wellness.</p>
+            <div class="plan-footer">
+              <div class="plan-pricing">
+                <span class="pricing-amount">$99</span>
+                <span class="pricing-sub">Full Program Access</span>
+              </div>
+              <button class="btn btn-outline view-plan-trigger" style="padding: 0.6rem 1.1rem; font-size: 0.85rem;">View Plan</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 3: TRAINERS / MEET THE COACH (Continuous Flow)
+         ========================================================================== -->
+    <section id="trainers" class="section-container" style="background-color: var(--bg-surface);">
+      <div class="container">
+        
+        <!-- Coach Hero Grid -->
+        <div class="coach-hero-grid">
+          <!-- Coach Photo Card Side -->
+          <div class="coach-photo-card">
+            <img src="https://images.unsplash.com/photo-1567013127542-490d757e51fc?q=80&w=1000&auto=format&fit=crop" alt="Marcus Vance Head Trainer CBA9Fitness">
+            <div class="coach-photo-overlay">
+              <div class="coach-exp-badge">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                12+ Years Coaching Experience
+              </div>
+            </div>
+          </div>
+
+          <!-- Coach Details Side -->
+          <div class="coach-details">
+            <div class="section-tag">Elite Leadership</div>
+            <h2 class="coach-name">MARCUS VANCE</h2>
+            <h3 class="coach-title">Head Trainer & Founder</h3>
+            
+            <p class="coach-bio">
+              Marcus founded CBA9Fitness with a singular mission: stripping away fitness fads and delivering uncompromising, science-driven strength training protocols. Having coached over 3,000 collegiate athletes, executive leaders, and dedicated fitness enthusiasts, Marcus designs personalized systems that build unbreakable bodies and resilient mindsets.
+            </p>
+
+            <!-- Certifications List -->
+            <div style="margin-bottom: 0.5rem; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">
+              Credentials & Certifications
+            </div>
+            <div class="certifications-row">
+              <span class="cert-badge">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                CSCS® (Strength & Conditioning Specialist)
+              </span>
+              <span class="cert-badge">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                NASM-CPT Master Trainer
+              </span>
+              <span class="cert-badge">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
+                Precision Nutrition Level 2 Master
+              </span>
+              <span class="cert-badge">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                FMS Movement Specialist
+              </span>
+            </div>
+
+            <!-- Action CTA -->
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+              <a href="#consultation-booking" class="btn btn-primary" style="padding: 0.9rem 2rem;">Book a Free Consultation</a>
+              <a href="#programs" class="btn btn-outline" style="padding: 0.9rem 1.75rem;">Explore Training Plans</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Specialties Grid -->
+        <div class="specialties-section" style="border-top-color: var(--border-subtle);">
+          <h3 class="section-subhead">Core Coaching Specialties</h3>
+          
+          <div class="specialties-grid">
+            <div class="specialty-card">
+              <div class="specialty-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 5v14M18 5v14M2 9v6M22 9v6M6 12h12M2 12h4M18 12h4"/>
+                </svg>
+              </div>
+              <div class="specialty-content">
+                <h4>Strength Training</h4>
+                <p>Periodized compound mechanics, neuromuscular power development, and safe progressive overload systems.</p>
+              </div>
+            </div>
+
+            <div class="specialty-card">
+              <div class="specialty-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 14.93V18a1 1 0 0 1-2 0v-1.07A6 6 0 0 1 7 11a1 1 0 0 1 2 0 4 4 0 0 0 8 0 1 1 0 0 1 2 0 6 6 0 0 1-6 5.93z"/>
+                </svg>
+              </div>
+              <div class="specialty-content">
+                <h4>Nutrition Coaching</h4>
+                <p>Tailored macronutrient protocols, nutrient timing, metabolic health, and sustainable lifestyle habit mastery.</p>
+              </div>
+            </div>
+
+            <div class="specialty-card">
+              <div class="specialty-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                </svg>
+              </div>
+              <div class="specialty-content">
+                <h4>Injury Recovery & Prehab</h4>
+                <p>Joint stabilization, corrective movement assessment, and post-rehabilitation return-to-performance plans.</p>
+              </div>
+            </div>
+
+            <div class="specialty-card">
+              <div class="specialty-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+              </div>
+              <div class="specialty-content">
+                <h4>Functional Conditioning</h4>
+                <p>High-power energy system development, VO2 max optimization, and athletic multi-planar stamina.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Consultation & Contact Block -->
+        <div id="consultation-booking" class="contact-section">
+          <div class="contact-layout-grid">
+            
+            <!-- Contact Info Side -->
+            <div class="contact-info-block">
+              <div>
+                <div class="section-tag">Direct Access</div>
+                <h3 style="font-family: var(--font-heading); font-size: 2.2rem; color: #FFFFFF; text-transform: uppercase; margin-bottom: 0.75rem;">GET IN TOUCH</h3>
+                <p style="color: var(--text-secondary); font-size: 0.98rem; line-height: 1.6;">Have questions before starting or ready to schedule your 1-on-1 athlete assessment? Reach out through any channel below.</p>
+              </div>
+
+              <div class="contact-info-item">
+                <div class="contact-info-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                </div>
+                <div class="contact-info-text">
+                  <span class="label">Phone Number</span>
+                  <div class="value">+1 (800) 555-CBA9</div>
+                </div>
+              </div>
+
+              <div class="contact-info-item">
+                <div class="contact-info-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                </div>
+                <div class="contact-info-text">
+                  <span class="label">Direct Email</span>
+                  <div class="value">marcus@cba9fitness.com</div>
+                </div>
+              </div>
+
+              <div class="contact-info-item">
+                <div class="contact-info-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                </div>
+                <div class="contact-info-text">
+                  <span class="label">Headquarters Facility</span>
+                  <div class="value">400 Ironwork Blvd, Suite 900</div>
+                </div>
+              </div>
+
+              <div>
+                <span class="label" style="display:block; margin-bottom: 0.6rem;">Follow Coach Marcus</span>
+                <div class="social-links">
+                  <a href="#" class="social-btn" aria-label="Instagram">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                  </a>
+                  <a href="#" class="social-btn" aria-label="YouTube">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+                  </a>
+                  <a href="#" class="social-btn" aria-label="Twitter">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
+                  </a>
+                  <a href="#" class="social-btn" aria-label="LinkedIn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Interactive Contact Form -->
+            <div class="contact-form-card">
+              <h3 style="font-family: var(--font-heading); font-size: 1.75rem; color: #FFFFFF; text-transform: uppercase; margin-bottom: 0.5rem;">Send a Message</h3>
+              <p style="color: var(--text-secondary); font-size: 0.92rem; margin-bottom: 1.5rem;">Fill out this form to book your free strategy call or submit general inquiries.</p>
+              
+              <form id="coachContactForm">
+                <div class="form-group">
+                  <label class="form-label" for="contactName">Your Name</label>
+                  <input type="text" id="contactName" class="form-input" placeholder="e.g. Michael Stone" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="contactEmail">Email Address</label>
+                  <input type="email" id="contactEmail" class="form-input" placeholder="michael@example.com" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="contactGoal">Goal or Subject</label>
+                  <select id="contactGoal" class="form-select">
+                    <option>Book 1-on-1 Free Consultation</option>
+                    <option>Training Plan Recommendation</option>
+                    <option>Nutrition Coaching Inquiry</option>
+                    <option>Injury Rehabilitation Assessment</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="contactMessage">Message / Current Fitness Background</label>
+                  <textarea id="contactMessage" class="form-textarea" placeholder="Tell Coach Marcus about your fitness experience, injuries, and what you'd like to achieve..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.9rem;">Submit Consultation Request</button>
+              </form>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 4: COMMUNITY / WHY TRUST US (Transformations Flow)
+         ========================================================================== -->
+    <section id="community" class="section-container">
+      <div class="container">
+        
+        <!-- Header -->
+        <div class="page-header" style="padding-top: 2rem;">
+          <div class="section-tag">Proven Track Record</div>
+          <h2 class="page-title">WHY TRUST US</h2>
+          <p class="page-subtitle">Real people. Real transformations.</p>
+        </div>
+
+        <!-- Transformations Grid (8 Client Transformation Cards) -->
+        <div class="transformations-grid">
+
+          <!-- Card 1: David M. -->
+          <article class="trans-card">
+            <div class="trans-images-split">
+              <div class="trans-img-box">
+                <img src="https://images.unsplash.com/photo-1548690312-e3b507d8c110?q=80&w=600&auto=format&fit=crop" alt="David Before">
+                <span class="img-badge badge-before">Before</span>
+              </div>
+              <div class="trans-divider">
+                <div class="trans-divider-icon">VS</div>
+              </div>
+              <div class="trans-img-box">
+                <img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?q=80&w=600&auto=format&fit=crop" alt="David After">
+                <span class="img-badge badge-after">After</span>
+              </div>
+            </div>
+            <div class="trans-body">
+              <div class="trans-meta">
+                <h3 class="client-name">David</h3>
+                <span class="program-duration">12 Weeks</span>
+              </div>
+              <p class="trans-quote">"Dropped 18 lbs of stubborn fat while adding 40 lbs to my compound bench press."</p>
+            </div>
+          </article>
+
+          <!-- Card 2: Sarah K. -->
+          <article class="trans-card">
+            <div class="trans-images-split">
+              <div class="trans-img-box">
+                <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=600&auto=format&fit=crop" alt="Sarah Before">
+                <span class="img-badge badge-before">Before</span>
+              </div>
+              <div class="trans-divider">
+                <div class="trans-divider-icon">VS</div>
+              </div>
+              <div class="trans-img-box">
+                <img src="https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?q=80&w=600&auto=format&fit=crop" alt="Sarah After">
+                <span class="img-badge badge-after">After</span>
+              </div>
+            </div>
+            <div class="trans-body">
+              <div class="trans-meta">
+                <h3 class="client-name">Sarah</h3>
+                <span class="program-duration">16 Weeks</span>
+              </div>
+              <p class="trans-quote">"Completely redefined my body composition and built core strength I never thought possible."</p>
+            </div>
+          </article>
+
+          <!-- Card 3: Marcus T. -->
+          <article class="trans-card">
+            <div class="trans-images-split">
+              <div class="trans-img-box">
+                <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=600&auto=format&fit=crop" alt="Marcus Before">
+                <span class="img-badge badge-before">Before</span>
+              </div>
+              <div class="trans-divider">
+                <div class="trans-divider-icon">VS</div>
+              </div>
+              <div class="trans-img-box">
+                <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=600&auto=format&fit=crop" alt="Marcus After">
+                <span class="img-badge badge-after">After</span>
+              </div>
+            </div>
+            <div class="trans-body">
+              <div class="trans-meta">
+                <h3 class="client-name">Marcus</h3>
+                <span class="program-duration">8 Weeks</span>
+              </div>
+              <p class="trans-quote">"The structured macro plan and explosive functional training gave me single-digit body fat."</p>
+            </div>
+          </article>
+
+          <!-- Card 4: Elena R. -->
+          <article class="trans-card">
+            <div class="trans-images-split">
+              <div class="trans-img-box">
+                <img src="https://images.unsplash.com/photo-1574680096145-d05b474e2155?q=80&w=600&auto=format&fit=crop" alt="Elena Before">
+                <span class="img-badge badge-before">Before</span>
+              </div>
+              <div class="trans-divider">
+                <div class="trans-divider-icon">VS</div>
+              </div>
+              <div class="trans-img-box">
+                <img src="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?q=80&w=600&auto=format&fit=crop" alt="Elena After">
+                <span class="img-badge badge-after">After</span>
+              </div>
+            </div>
+            <div class="trans-body">
+              <div class="trans-meta">
+                <h3 class="client-name">Elena</h3>
+                <span class="program-duration">12 Weeks</span>
+              </div>
+              <p class="trans-quote">"Gained 6 lbs of lean muscle and hit a 225-lb deadlift milestone without joint pain."</p>
+            </div>
+          </article>
+
+          <!-- Card 5: Jordan P. -->
+          <article class="trans-card">
+            <div class="trans-images-split">
+              <div class="trans-img-box">
+                <img src="https://images.unsplash.com/photo-1567013127542-490d757e51fc?q=80&w=600&auto=format&fit=crop" alt="Jordan Before">
+                <span class="img-badge badge-before">Before</span>
+              </div>
+              <div class="trans-divider">
+                <div class="trans-divider-icon">VS</div>
+              </div>
+              <div class="trans-img-box">
+                <img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=600&auto=format&fit=crop" alt="Jordan After">
+                <span class="img-badge badge-after">After</span>
+              </div>
+            </div>
+            <div class="trans-body">
+              <div class="trans-meta">
+                <h3 class="client-name">Jordan</h3>
+                <span class="program-duration">20 Weeks</span>
+              </div>
+              <p class="trans-quote">"From complete gym beginner to running 5Ks and lifting with total technical confidence."</p>
+            </div>
+          </article>
+
+          <!-- Card 6: Ryan W. -->
+          <article class="trans-card">
+            <div class="trans-images-split">
+              <div class="trans-img-box">
+                <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=600&auto=format&fit=crop" alt="Ryan Before">
+                <span class="img-badge badge-before">Before</span>
+              </div>
+              <div class="trans-divider">
+                <div class="trans-divider-icon">VS</div>
+              </div>
+              <div class="trans-img-box">
+                <img src="https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?q=80&w=600&auto=format&fit=crop" alt="Ryan After">
+                <span class="img-badge badge-after">After</span>
+              </div>
+            </div>
+            <div class="trans-body">
+              <div class="trans-meta">
+                <h3 class="client-name">Ryan</h3>
+                <span class="program-duration">14 Weeks</span>
+              </div>
+              <p class="trans-quote">"Rehabilitated my lower back while sculpting dense shoulder and upper back definition."</p>
+            </div>
+          </article>
+
+          <!-- Card 7: Maya L. -->
+          <article class="trans-card">
+            <div class="trans-images-split">
+              <div class="trans-img-box">
+                <img src="https://images.unsplash.com/photo-1518310383802-640c2de311b2?q=80&w=600&auto=format&fit=crop" alt="Maya Before">
+                <span class="img-badge badge-before">Before</span>
+              </div>
+              <div class="trans-divider">
+                <div class="trans-divider-icon">VS</div>
+              </div>
+              <div class="trans-img-box">
+                <img src="https://images.unsplash.com/photo-1507398941214-572c25f4b1dc?q=80&w=600&auto=format&fit=crop" alt="Maya After">
+                <span class="img-badge badge-after">After</span>
+              </div>
+            </div>
+            <div class="trans-body">
+              <div class="trans-meta">
+                <h3 class="client-name">Maya</h3>
+                <span class="program-duration">10 Weeks</span>
+              </div>
+              <p class="trans-quote">"Unlocked explosive agility and athletic stamina that transferred directly to my sport."</p>
+            </div>
+          </article>
+
+          <!-- Card 8: Carlos D. -->
+          <article class="trans-card">
+            <div class="trans-images-split">
+              <div class="trans-img-box">
+                <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=600&auto=format&fit=crop" alt="Carlos Before">
+                <span class="img-badge badge-before">Before</span>
+              </div>
+              <div class="trans-divider">
+                <div class="trans-divider-icon">VS</div>
+              </div>
+              <div class="trans-img-box">
+                <img src="https://images.unsplash.com/photo-1584865288642-42078afe6942?q=80&w=600&auto=format&fit=crop" alt="Carlos After">
+                <span class="img-badge badge-after">After</span>
+              </div>
+            </div>
+            <div class="trans-body">
+              <div class="trans-meta">
+                <h3 class="client-name">Carlos</h3>
+                <span class="program-duration">18 Weeks</span>
+              </div>
+              <p class="trans-quote">"Lost 32 lbs and regained high energy levels to keep up with my family every day."</p>
+            </div>
+          </article>
+
+        </div>
+
+        <!-- Trust CTA Banner -->
+        <div style="background: linear-gradient(135deg, #152238 0%, #0D1626 100%); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 3rem; text-align: center; margin-bottom: 5rem;">
+          <h3 style="font-family: var(--font-heading); font-size: 2.2rem; color: #FFFFFF; margin-bottom: 0.75rem;">READY TO WRITE YOUR OWN SUCCESS STORY?</h3>
+          <p style="color: var(--text-secondary); max-width: 580px; margin: 0 auto 1.75rem; font-size: 1.05rem;">Join over 50,000 members who took the first step and achieved permanent results.</p>
+          <a href="#consultModal" class="btn btn-primary consult-modal-trigger" style="padding: 0.9rem 2.2rem;">Claim Your Transformation Spot</a>
+        </div>
+
       </div>
     </section>
   </main>
@@ -149,7 +855,7 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <a href="index.html" class="logo">
+          <a href="#home" class="logo">
             <span class="logo-icon">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                 <path d="m6.5 6.5 11 11"/>
@@ -167,20 +873,20 @@
         <div class="footer-col">
           <h5>Navigation</h5>
           <ul class="footer-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="plans.html">Training Plans</a></li>
-            <li><a href="transformations.html">Transformations</a></li>
-            <li><a href="coach.html">Meet the Coach</a></li>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#programs">Training Plans</a></li>
+            <li><a href="#trainers">Meet the Coach</a></li>
+            <li><a href="#community">Transformations</a></li>
           </ul>
         </div>
 
         <div class="footer-col">
           <h5>Programs</h5>
           <ul class="footer-links">
-            <li><a href="plans.html">Strength Building</a></li>
-            <li><a href="plans.html">Fat Loss Blitz</a></li>
-            <li><a href="plans.html">Hypertrophy Lab</a></li>
-            <li><a href="plans.html">Athletic Performance</a></li>
+            <li><a href="#programs">Strength Building</a></li>
+            <li><a href="#programs">Fat Loss Blitz</a></li>
+            <li><a href="#programs">Hypertrophy Lab</a></li>
+            <li><a href="#programs">Athletic Performance</a></li>
           </ul>
         </div>
 
@@ -200,6 +906,37 @@
       </div>
     </div>
   </footer>
+
+  <!-- Interactive Plan Detail Modal -->
+  <div id="planModal" class="modal-backdrop">
+    <div class="modal-card">
+      <button class="modal-close-btn modal-close-trigger" aria-label="Close modal">✕</button>
+      <div id="planModalCategory" class="section-tag" style="margin-bottom: 0.5rem;">Training Program</div>
+      <h3 id="planModalTitle" style="font-family: var(--font-heading); font-size: 2.1rem; color: #FFFFFF; line-height: 1.1; margin-bottom: 0.75rem;">Program Name</h3>
+      
+      <div style="display: flex; gap: 1rem; margin-bottom: 1.25rem; font-size: 0.88rem; color: var(--text-secondary);">
+        <div><strong>Duration:</strong> <span id="planModalDuration">12 Weeks</span></div>
+        <div>•</div>
+        <div><strong>Level:</strong> <span id="planModalDifficulty">Intermediate</span></div>
+        <div>•</div>
+        <div><strong>Badge:</strong> <span id="planModalPricing">$149</span></div>
+      </div>
+
+      <p id="planModalDesc" style="font-size: 1rem; color: #CBD5E1; line-height: 1.6; margin-bottom: 1.5rem;"></p>
+
+      <div style="border-top: 1px solid var(--border-subtle); padding-top: 1.25rem; margin-bottom: 1.5rem;">
+        <h4 style="font-family: var(--font-heading); font-size: 1.2rem; color: #FFFFFF; margin-bottom: 0.75rem; text-transform: uppercase;">What's Included:</h4>
+        <ul id="planModalFeatures" style="list-style: none; padding: 0;">
+          <!-- Injected via JavaScript -->
+        </ul>
+      </div>
+
+      <div style="display: flex; gap: 1rem;">
+        <a href="#consultModal" class="btn btn-primary consult-modal-trigger modal-close-trigger" style="flex: 1;">Enroll In Plan</a>
+        <button class="btn btn-outline modal-close-trigger">Close</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Consultation Booking Modal -->
   <div id="consultModal" class="modal-backdrop">

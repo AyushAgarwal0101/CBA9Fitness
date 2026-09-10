@@ -1,11 +1,12 @@
 /**
- * CBA9FITNESS - Interactive Web Scripts
+ * CBA9FITNESS - Interactive Web Scripts & Smooth Scroll Navigation
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Mobile Menu Toggle
+  // 1. Mobile Menu Toggle & Auto Close on Click
   const mobileToggle = document.querySelector('.mobile-toggle');
   const navLinks = document.querySelector('.nav-links');
+  const navItems = document.querySelectorAll('.nav-link');
 
   if (mobileToggle && navLinks) {
     mobileToggle.addEventListener('click', () => {
@@ -16,9 +17,52 @@ document.addEventListener('DOMContentLoaded', () => {
         ? `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`
         : `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>`;
     });
+
+    // Close mobile nav when clicking any nav link
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        if (navLinks.classList.contains('mobile-open')) {
+          navLinks.classList.remove('mobile-open');
+          mobileToggle.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>`;
+        }
+      });
+    });
   }
 
-  // 2. Training Plans Category Filtering
+  // 2. Active Section Scroll Spy (Highlights navbar item when scrolling)
+  const sections = document.querySelectorAll('section[id], body#home');
+  const headerLinks = document.querySelectorAll('.nav-links .nav-link');
+
+  function updateActiveNavOnScroll() {
+    const scrollY = window.pageYOffset;
+    const headerHeight = 90;
+
+    let currentSectionId = '';
+
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop - headerHeight;
+      const sectionHeight = section.offsetHeight;
+      const sectionId = section.getAttribute('id');
+
+      if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+        currentSectionId = sectionId;
+      }
+    });
+
+    headerLinks.forEach(link => {
+      const targetSection = link.getAttribute('data-section');
+      if (targetSection === currentSectionId) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+  }
+
+  window.addEventListener('scroll', updateActiveNavOnScroll);
+  updateActiveNavOnScroll();
+
+  // 3. Training Plans Category Filtering
   const filterBtns = document.querySelectorAll('.filter-btn');
   const planCards = document.querySelectorAll('.plan-card');
 
@@ -42,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 3. Plan Details Modal Logic
+  // 4. Plan Details Modal Logic
   const planModal = document.getElementById('planModal');
   const planModalTitle = document.getElementById('planModalTitle');
   const planModalCategory = document.getElementById('planModalCategory');
@@ -97,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 4. Consultation Booking Modal Logic (for Start Here buttons)
+  // 5. Consultation Booking Modal Logic (for Start Here buttons)
   const consultModal = document.getElementById('consultModal');
   const consultTriggers = document.querySelectorAll('.consult-modal-trigger');
 
@@ -142,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.style.overflow = '';
   }
 
-  // 5. Toast Notification System
+  // 6. Toast Notification System
   function showToast(message) {
     let toast = document.getElementById('siteToast');
     if (!toast) {
@@ -159,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 4000);
   }
 
-  // 6. Form Submission Handlers
+  // 7. Form Submission Handlers
   const coachForm = document.getElementById('coachContactForm');
   if (coachForm) {
     coachForm.addEventListener('submit', (e) => {
