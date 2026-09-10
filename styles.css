@@ -1151,11 +1151,17 @@ button, input, textarea, select {
   flex-shrink: 0;
 }
 
+.contact-info-text {
+  display: flex;
+  flex-direction: column;
+}
+
 .contact-info-text .label {
   font-size: 0.78rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--text-muted);
+  margin-bottom: 0.15rem;
 }
 
 .contact-info-text .value {
