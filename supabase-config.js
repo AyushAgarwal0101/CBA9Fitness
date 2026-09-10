@@ -1,42 +1,45 @@
 /**
  * CBA9FITNESS - SUPABASE CLIENT CONFIGURATION & BACKEND INTEGRATION
  * ==============================================================================
- * To connect your Supabase project:
- * 1. Create a free project at https://supabase.com
- * 2. In your Supabase Project Settings -> API, copy:
- *    - Project URL -> paste into SUPABASE_URL below
- *    - Project Anon Key (public) -> paste into SUPABASE_ANON_KEY below
- * 3. Run the 'supabase_schema.sql' script in the Supabase SQL Editor.
- * 4. Add your personal Gmail to ADMIN_EMAIL below to receive notification alerts.
+ * Live Connected Supabase Project: mvnjuxjnntixwxrdnemw
  * ==============================================================================
  */
 
 const SUPABASE_CONFIG = {
-  // Replace these with your actual Supabase credentials from https://supabase.com/dashboard/project/_/settings/api
-  SUPABASE_URL: "https://your-project-ref.supabase.co",
-  SUPABASE_ANON_KEY: "your-supabase-anon-key",
+  // Live Supabase Project Credentials
+  SUPABASE_URL: "https://mvnjuxjnntixwxrdnemw.supabase.co",
+  SUPABASE_ANON_KEY: "sb_publishable_PFk6OdtE4ai9N8LOrGvwtQ_phgwYxDB",
   
-  // Enter the Gmail address where you want to receive customer enrollment & consultation alerts
+  // Admin Gmail address where notification alerts for customer enrollments & leads are routed
   ADMIN_EMAIL: "cba9fitness@gmail.com",
 
-  // Optional: If you use Supabase Edge Functions or EmailJS for instant email delivery to your Gmail
-  EDGE_FUNCTION_URL: "https://your-project-ref.supabase.co/functions/v1/notify-admin"
+  // Edge Function Endpoint for automated email notifications
+  EDGE_FUNCTION_URL: "https://mvnjuxjnntixwxrdnemw.supabase.co/functions/v1/notify-admin"
 };
 
 // Global Supabase Client Instance
 let supabaseClient = null;
 
 /**
+ * Sanitizes the Supabase URL by removing any trailing slashes or /rest/v1 paths.
+ */
+function getCleanSupabaseUrl() {
+  let url = SUPABASE_CONFIG.SUPABASE_URL || '';
+  return url.replace(/\/rest\/v1\/?$/i, '').replace(/\/+$/, '');
+}
+
+/**
  * Initializes the Supabase client if configured.
- * Returns the client instance or null if in prototype/fallback mode.
+ * Returns the client instance or null if in fallback mode.
  */
 function getSupabaseClient() {
   if (supabaseClient) return supabaseClient;
 
   if (isSupabaseConfigured() && window.supabase && typeof window.supabase.createClient === 'function') {
     try {
-      supabaseClient = window.supabase.createClient(SUPABASE_CONFIG.SUPABASE_URL, SUPABASE_CONFIG.SUPABASE_ANON_KEY);
-      console.log('✅ CBA9Fitness: Connected to Supabase backend successfully.');
+      const cleanUrl = getCleanSupabaseUrl();
+      supabaseClient = window.supabase.createClient(cleanUrl, SUPABASE_CONFIG.SUPABASE_ANON_KEY);
+      console.log('✅ CBA9Fitness: Connected to Supabase backend successfully at:', cleanUrl);
       return supabaseClient;
     } catch (err) {
       console.warn('⚠️ CBA9Fitness: Failed to initialize Supabase client:', err);
@@ -47,15 +50,14 @@ function getSupabaseClient() {
 }
 
 /**
- * Checks if Supabase credentials have been replaced with real credentials.
+ * Checks if Supabase credentials have been configured.
  */
 function isSupabaseConfigured() {
   return (
-    SUPABASE_CONFIG.SUPABASE_URL &&
+    Boolean(SUPABASE_CONFIG.SUPABASE_URL) &&
     SUPABASE_CONFIG.SUPABASE_URL.startsWith('https://') &&
-    !SUPABASE_CONFIG.SUPABASE_URL.includes('your-project-ref') &&
-    SUPABASE_CONFIG.SUPABASE_ANON_KEY &&
-    !SUPABASE_CONFIG.SUPABASE_ANON_KEY.includes('your-supabase-anon-key')
+    Boolean(SUPABASE_CONFIG.SUPABASE_ANON_KEY) &&
+    SUPABASE_CONFIG.SUPABASE_ANON_KEY.length > 10
   );
 }
 
@@ -112,7 +114,7 @@ async function recordProgramEnrollment(enrollmentData) {
       console.error('❌ Supabase recordProgramEnrollment error:', err);
     }
   } else {
-    console.info('ℹ️ [Demo Mode] Enrollment recorded locally (Connect Supabase in supabase-config.js to persist):', enrollmentData);
+    console.info('ℹ️ [Local Mode] Enrollment recorded:', enrollmentData);
   }
 
   // 2. Dispatch admin email alert to your Gmail
@@ -157,7 +159,7 @@ async function recordConsultationRequest(consultData) {
       console.error('❌ Supabase recordConsultationRequest error:', err);
     }
   } else {
-    console.info('ℹ️ [Demo Mode] Consultation recorded locally (Connect Supabase in supabase-config.js to persist):', consultData);
+    console.info('ℹ️ [Local Mode] Consultation recorded:', consultData);
   }
 
   // 2. Dispatch admin email alert to your Gmail
@@ -192,7 +194,7 @@ async function recordNewsletterSubscription(email) {
       console.error('❌ Supabase recordNewsletterSubscription error:', err);
     }
   } else {
-    console.info('ℹ️ [Demo Mode] Newsletter subscriber registered:', email);
+    console.info('ℹ️ [Local Mode] Newsletter subscriber registered:', email);
   }
 
   return { success: true };
@@ -203,11 +205,10 @@ async function recordNewsletterSubscription(email) {
  * Supports Supabase Edge Functions, custom webhook endpoints, or email dispatchers.
  */
 async function dispatchAdminEmailNotification(subject, details) {
-  console.log(`📧 [Admin Gmail Notification Triggered] -> To: ${SUPABASE_CONFIG.ADMIN_EMAIL}`);
+  console.log(`📧 [Admin Gmail Notification] -> To: ${SUPABASE_CONFIG.ADMIN_EMAIL}`);
   console.log(`📌 Subject: [CBA9Fitness] ${subject}`);
   console.table(details);
 
-  // If a live Edge function or Webhook URL is specified and configured:
   if (SUPABASE_CONFIG.EDGE_FUNCTION_URL && !SUPABASE_CONFIG.EDGE_FUNCTION_URL.includes('your-project-ref')) {
     try {
       await fetch(SUPABASE_CONFIG.EDGE_FUNCTION_URL, {
