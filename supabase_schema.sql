@@ -9,7 +9,48 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- ==============================================================================
--- 2. TABLE: training_plans (Dynamic Training Programs & Packages)
+-- 2. TABLE: users (Google OAuth Athletes & Profile Records)
+-- ==============================================================================
+CREATE TABLE IF NOT EXISTS public.users (
+  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  google_id TEXT UNIQUE,
+  name TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  profile_picture TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+  last_login TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
+);
+
+-- Automatic Auth Trigger: Sync auth.users into public.users upon Google OAuth Sign-in
+CREATE OR REPLACE FUNCTION public.handle_new_auth_user()
+RETURNS trigger AS $$
+BEGIN
+  INSERT INTO public.users (id, google_id, name, email, profile_picture, created_at, last_login)
+  VALUES (
+    new.id,
+    COALESCE(new.raw_user_meta_data->>'provider_id', new.raw_user_meta_data->>'sub', new.id::text),
+    COALESCE(new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'name', split_part(new.email, '@', 1)),
+    new.email,
+    COALESCE(new.raw_user_meta_data->>'avatar_url', new.raw_user_meta_data->>'picture', ''),
+    timezone('utc'::text, now()),
+    timezone('utc'::text, now())
+  )
+  ON CONFLICT (id) DO UPDATE SET
+    name = EXCLUDED.name,
+    email = EXCLUDED.email,
+    profile_picture = EXCLUDED.profile_picture,
+    last_login = timezone('utc'::text, now());
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT OR UPDATE ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_auth_user();
+
+-- ==============================================================================
+-- 3. TABLE: training_plans (Dynamic Training Programs & Packages)
 -- ==============================================================================
 CREATE TABLE IF NOT EXISTS public.training_plans (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -31,7 +72,7 @@ CREATE TABLE IF NOT EXISTS public.training_plans (
 );
 
 -- ==============================================================================
--- 3. TABLE: enrollments (Customer Program Signups)
+-- 4. TABLE: enrollments (Customer Program Signups)
 -- ==============================================================================
 CREATE TABLE IF NOT EXISTS public.enrollments (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -50,7 +91,7 @@ CREATE TABLE IF NOT EXISTS public.enrollments (
 );
 
 -- ==============================================================================
--- 4. TABLE: consultations (Strategy Calls & Contact Messages)
+-- 5. TABLE: consultations (Strategy Calls & Contact Messages)
 -- ==============================================================================
 CREATE TABLE IF NOT EXISTS public.consultations (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -67,7 +108,7 @@ CREATE TABLE IF NOT EXISTS public.consultations (
 );
 
 -- ==============================================================================
--- 5. TABLE: newsletter_subscribers (Athlete Newsletter)
+-- 6. TABLE: newsletter_subscribers (Athlete Newsletter)
 -- ==============================================================================
 CREATE TABLE IF NOT EXISTS public.newsletter_subscribers (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -77,15 +118,37 @@ CREATE TABLE IF NOT EXISTS public.newsletter_subscribers (
 );
 
 -- ==============================================================================
--- 6. ROW LEVEL SECURITY (RLS) POLICIES
+-- 7. ROW LEVEL SECURITY (RLS) POLICIES
 -- ==============================================================================
 
+ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.training_plans ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.enrollments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.consultations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.newsletter_subscribers ENABLE ROW LEVEL SECURITY;
 
--- 6.1 training_plans policies
+-- 7.1 users policies
+CREATE POLICY "Users can view their own profile" 
+  ON public.users 
+  FOR SELECT 
+  TO authenticated 
+  USING (auth.uid() = id);
+
+CREATE POLICY "Users can update their own profile" 
+  ON public.users 
+  FOR UPDATE 
+  TO authenticated 
+  USING (auth.uid() = id)
+  WITH CHECK (auth.uid() = id);
+
+CREATE POLICY "Admins full access to users" 
+  ON public.users 
+  FOR ALL 
+  TO authenticated 
+  USING (true) 
+  WITH CHECK (true);
+
+-- 7.2 training_plans policies
 CREATE POLICY "Public can view active training plans" 
   ON public.training_plans 
   FOR SELECT 
@@ -98,7 +161,7 @@ CREATE POLICY "Admins full access to training plans"
   USING (true) 
   WITH CHECK (true);
 
--- 6.2 enrollments policies
+-- 7.3 enrollments policies
 CREATE POLICY "Public and users can submit program enrollments" 
   ON public.enrollments 
   FOR INSERT 
@@ -117,7 +180,7 @@ CREATE POLICY "Admins full access to enrollments"
   USING (true) 
   WITH CHECK (true);
 
--- 6.3 consultations policies
+-- 7.4 consultations policies
 CREATE POLICY "Public and users can submit consultation requests" 
   ON public.consultations 
   FOR INSERT 
@@ -136,7 +199,7 @@ CREATE POLICY "Admins full access to consultations"
   USING (true) 
   WITH CHECK (true);
 
--- 6.4 newsletter_subscribers policies
+-- 7.5 newsletter_subscribers policies
 CREATE POLICY "Public can subscribe to newsletter" 
   ON public.newsletter_subscribers 
   FOR INSERT 

@@ -1,7 +1,8 @@
 /**
- * CBA9FITNESS - SUPABASE CLIENT CONFIGURATION & AUTHENTICATION BACKEND
+ * CBA9FITNESS - SUPABASE CLIENT CONFIGURATION & GOOGLE OAUTH 2.0 AUTHENTICATION
  * ==============================================================================
  * Live Connected Supabase Project: mvnjuxjnntixwxrdnemw
+ * Exclusively powered by Google OAuth 2.0 / Gmail accounts.
  * ==============================================================================
  */
 
@@ -42,7 +43,8 @@ function getSupabaseClient() {
         auth: {
           persistSession: true,
           autoRefreshToken: true,
-          detectSessionInUrl: true
+          detectSessionInUrl: true,
+          flowType: 'pkce'
         }
       });
       console.log('✅ CBA9Fitness: Connected to Supabase backend successfully at:', cleanUrl);
@@ -68,11 +70,12 @@ function isSupabaseConfigured() {
 }
 
 // ==============================================================================
-// AUTHENTICATION & GOOGLE OAUTH METHODS
+// AUTHENTICATION & GOOGLE OAUTH 2.0 METHODS
 // ==============================================================================
 
 /**
- * Initiates Google OAuth Sign-In via Supabase Auth.
+ * Initiates Google OAuth 2.0 Sign-In via Supabase Auth.
+ * Automatically handles first-time account creation (Sign-Up) and returning login (Sign-In).
  */
 async function signInWithGoogle(redirectToUrl) {
   const supabase = getSupabaseClient();
@@ -86,7 +89,7 @@ async function signInWithGoogle(redirectToUrl) {
           redirectTo: targetRedirect,
           queryParams: {
             access_type: 'offline',
-            prompt: 'consent'
+            prompt: 'select_account'
           }
         }
       });
@@ -94,11 +97,45 @@ async function signInWithGoogle(redirectToUrl) {
       return { success: true, data };
     } catch (err) {
       console.error('❌ Supabase signInWithOAuth error:', err);
-      return { success: false, error: err };
+      return { 
+        success: false, 
+        error: err.message || 'Google authentication encountered an error. Please try again.' 
+      };
     }
   }
 
+  // Fallback Demo Login if running offline or credentials pending
   return signInWithDemoAthlete();
+}
+
+/**
+ * Syncs the Google user profile into the public.users database table.
+ */
+async function syncUserProfile(user) {
+  if (!user) return;
+  const supabase = getSupabaseClient();
+  if (!supabase) return;
+
+  try {
+    const fullName = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'Athlete';
+    const profilePic = user.user_metadata?.avatar_url || user.user_metadata?.picture || '';
+    const googleId = user.user_metadata?.provider_id || user.user_metadata?.sub || user.id;
+
+    await supabase
+      .from('users')
+      .upsert({
+        id: user.id,
+        google_id: googleId,
+        name: fullName,
+        email: user.email,
+        profile_picture: profilePic,
+        last_login: new Date().toISOString()
+      }, { onConflict: 'id' });
+      
+    console.log('✅ Athlete profile synced to public.users table.');
+  } catch (err) {
+    console.warn('⚠️ Note: public.users sync note:', err.message);
+  }
 }
 
 /**
@@ -106,12 +143,13 @@ async function signInWithGoogle(redirectToUrl) {
  */
 function signInWithDemoAthlete(customName, customEmail) {
   const demoUser = {
-    id: 'demo-athlete-' + Math.random().toString(36).substring(2, 9),
+    id: 'demo-google-' + Math.random().toString(36).substring(2, 9),
     email: customEmail || 'athlete@gmail.com',
     user_metadata: {
       full_name: customName || 'Athlete Client',
       name: customName || 'Athlete Client',
-      avatar_url: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=120&auto=format&fit=crop'
+      avatar_url: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=120&auto=format&fit=crop',
+      provider_id: 'google-sub-' + Date.now()
     }
   };
   localStorage.setItem('cba9_demo_session', JSON.stringify(demoUser));
@@ -135,6 +173,11 @@ async function signOutUser() {
     }
   }
 
+  // Call session termination API endpoint if available
+  try {
+    fetch('/api/auth/session', { method: 'POST' }).catch(() => {});
+  } catch (e) {}
+
   window.dispatchEvent(new CustomEvent('cba9_auth_state_change', { detail: { user: null } }));
   return { success: true };
 }
@@ -147,7 +190,11 @@ async function getCurrentUser() {
   if (supabase && supabase.auth) {
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (user) return user;
+      if (user) {
+        // Sync profile silently
+        syncUserProfile(user);
+        return user;
+      }
     } catch (err) {
       // ignore
     }
@@ -173,7 +220,11 @@ function onAuthStateChange(callback) {
   const supabase = getSupabaseClient();
   if (supabase && supabase.auth) {
     supabase.auth.onAuthStateChange((event, session) => {
-      callback(session ? session.user : null);
+      const user = session ? session.user : null;
+      if (user) {
+        syncUserProfile(user);
+      }
+      callback(user);
     });
   }
 
@@ -181,6 +232,50 @@ function onAuthStateChange(callback) {
   window.addEventListener('cba9_auth_state_change', (e) => {
     callback(e.detail.user);
   });
+}
+
+/**
+ * Fetch enrollments belonging to the authenticated user.
+ */
+async function fetchUserEnrollments(userId) {
+  const supabase = getSupabaseClient();
+  if (!supabase || !userId) return [];
+
+  try {
+    const { data, error } = await supabase
+      .from('enrollments')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data || [];
+  } catch (err) {
+    console.warn('⚠️ Could not fetch user enrollments:', err);
+    return [];
+  }
+}
+
+/**
+ * Fetch consultations belonging to the authenticated user.
+ */
+async function fetchUserConsultations(userId) {
+  const supabase = getSupabaseClient();
+  if (!supabase || !userId) return [];
+
+  try {
+    const { data, error } = await supabase
+      .from('consultations')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data || [];
+  } catch (err) {
+    console.warn('⚠️ Could not fetch user consultations:', err);
+    return [];
+  }
 }
 
 // ==============================================================================
@@ -374,6 +469,8 @@ window.CBA9_BACKEND = {
   signOut: signOutUser,
   getCurrentUser: getCurrentUser,
   onAuthStateChange: onAuthStateChange,
+  fetchUserEnrollments: fetchUserEnrollments,
+  fetchUserConsultations: fetchUserConsultations,
   fetchActivePlans: fetchActivePlansFromDB,
   recordEnrollment: recordProgramEnrollment,
   recordConsultation: recordConsultationRequest,

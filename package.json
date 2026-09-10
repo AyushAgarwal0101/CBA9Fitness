@@ -1,0 +1,25 @@
+{
+  "name": "cba9fitness",
+  "version": "2.0.0",
+  "description": "CBA9Fitness - Elite Gym, Body Transformation & Online Coaching Platform",
+  "main": "main.js",
+  "scripts": {
+    "start": "node -e \"const http=require('http'),fs=require('fs'),path=require('path');http.createServer((req,res)=>{let f=path.join(__dirname,req.url==='/'?'index.html':req.url.split('?')[0]);if(fs.existsSync(f)&&fs.statSync(f).isFile()){res.writeHead(200);fs.createReadStream(f).pipe(res);}else{res.writeHead(404);res.end('Not Found');}}).listen(8080,()=>console.log('Server running on port 8080'));\"",
+    "test": "node -c main.js && node -c supabase-config.js"
+  },
+  "dependencies": {
+    "google-auth-library": "^9.15.1"
+  },
+  "devDependencies": {},
+  "type": "commonjs",
+  "keywords": [
+    "fitness",
+    "gym",
+    "coaching",
+    "google-oauth",
+    "supabase",
+    "vercel"
+  ],
+  "author": "CBA9Fitness",
+  "license": "MIT"
+}

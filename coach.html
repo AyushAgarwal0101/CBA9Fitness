@@ -36,17 +36,9 @@
 
       <!-- Right Action CTA & Customer Auth -->
       <div class="nav-actions">
-        <!-- Dynamic Customer Auth Profile / Login Button -->
+        <!-- Dynamic Customer Auth Profile / SignUp Button -->
         <div id="navAuthContainer" class="nav-auth-container">
-          <button id="navSignInBtn" class="nav-signin-btn auth-modal-trigger" aria-label="Sign In with Google">
-            <svg class="google-icon" viewBox="0 0 24 24" width="16" height="16">
-              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-            </svg>
-            <span>Login</span>
-          </button>
+          <button id="navSignInBtn" class="nav-signin-btn auth-modal-trigger" aria-label="Sign Up">SignUp</button>
         </div>
 
         <a href="#consultModal" class="btn btn-white consult-modal-trigger">Start Here</a>
@@ -377,7 +369,7 @@
     </div>
   </div>
 
-  <!-- Modal: Athlete Google Auth / Sign-In Modal -->
+  <!-- Modal: Athlete Google Auth / Sign-In Modal (GIS Spec) -->
   <div class="modal-backdrop" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
     <div class="modal-card auth-modal-card">
       <button class="modal-close-btn modal-close-trigger" aria-label="Close Modal">&times;</button>
@@ -390,9 +382,9 @@
         </svg>
       </div>
 
-      <h2 class="auth-modal-title" id="authModalTitle">Athlete Sign In</h2>
+      <h2 class="auth-modal-title" id="authModalTitle">Athlete Account</h2>
       <p class="auth-modal-desc" id="authModalDesc">
-        Sign in with your Google account to book strategy calls, enroll in elite training programs, and track your fitness progress.
+        Join CBA9Fitness exclusively using your Google account to access personalized coaching, book strategy calls, and track transformations.
       </p>
 
       <div class="auth-gating-banner hidden" id="authGatingBanner">
@@ -400,23 +392,79 @@
           <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
           <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
         </svg>
-        <span id="authGatingMsg">Please sign in with Google to book your free consultation.</span>
+        <span id="authGatingMsg">Please sign in with Google to continue.</span>
       </div>
 
-      <!-- Google OAuth Button -->
-      <button class="btn-google" id="googleSignInBtn" type="button">
-        <svg viewBox="0 0 24 24">
+      <!-- Google Official GIS Sign-In / Sign-Up Button -->
+      <button class="btn-google-official" id="googleSignInBtn" type="button">
+        <svg class="google-logo-svg" viewBox="0 0 24 24">
           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
           <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
           <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
           <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
         </svg>
-        <span>Continue with Google</span>
+        <span id="googleBtnText">Continue with Google</span>
       </button>
 
+      <div class="auth-error-banner hidden" id="authErrorBanner"></div>
+
       <p class="auth-security-notice">
-        ⚡ <strong>Secure Instant Access:</strong> We use official Google authentication. Your session is protected and encrypted.
+        ⚡ <strong>One-Click Sign Up & Sign In:</strong> No password required. Exclusively secured via Google Identity Services & OAuth 2.0.
       </p>
+    </div>
+  </div>
+
+  <!-- Modal: Athlete Profile Modal -->
+  <div class="modal-backdrop" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
+    <div class="modal-card profile-modal-card">
+      <button class="modal-close-btn modal-close-trigger" aria-label="Close Modal">&times;</button>
+      
+      <div class="profile-avatar-large" id="profileModalAvatar">
+        <span>A</span>
+      </div>
+
+      <h2 class="auth-modal-title" id="profileModalName">Athlete Name</h2>
+      <p class="auth-modal-desc" id="profileModalEmail">athlete@gmail.com</p>
+
+      <div class="profile-field-group">
+        <div class="profile-field-row">
+          <span class="profile-field-label">Authentication:</span>
+          <span class="profile-field-value" style="color: #60A5FA;">✓ Verified Google Account</span>
+        </div>
+        <div class="profile-field-row">
+          <span class="profile-field-label">Account Status:</span>
+          <span class="profile-field-value" style="color: #4ADE80;">Active Athlete</span>
+        </div>
+        <div class="profile-field-row">
+          <span class="profile-field-label">Google ID:</span>
+          <span class="profile-field-value" id="profileModalGoogleId" style="font-family: monospace; font-size: 0.8rem;">--</span>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 0.75rem; justify-content: center; margin-top: 1.5rem;">
+        <button type="button" class="btn btn-primary user-plans-trigger" style="flex: 1; padding: 0.75rem;">My Programs</button>
+        <button type="button" class="btn btn-white signout-btn" style="padding: 0.75rem 1.25rem;">Sign Out</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Athlete Enrolled Programs & Consultations Modal -->
+  <div class="modal-backdrop" id="userPlansModal" role="dialog" aria-modal="true" aria-labelledby="userPlansModalTitle">
+    <div class="modal-card" style="max-width: 580px; padding: 2.5rem 2rem;">
+      <button class="modal-close-btn modal-close-trigger" aria-label="Close Modal">&times;</button>
+      
+      <h2 class="auth-modal-title" id="userPlansModalTitle">My Programs & Consultations</h2>
+      <p class="auth-modal-desc">Review your coaching enrollments and strategy calls with Coach Arijit Basu.</p>
+
+      <div class="user-plans-list" id="userPlansListContainer">
+        <div style="text-align: center; padding: 2rem; color: #94A3B8;">
+          <p>Loading your athlete records...</p>
+        </div>
+      </div>
+
+      <div style="margin-top: 1.5rem; text-align: center;">
+        <a href="plans.html" class="btn btn-primary" style="display: inline-block; padding: 0.75rem 1.5rem;">Explore All Packages</a>
+      </div>
     </div>
   </div>
 

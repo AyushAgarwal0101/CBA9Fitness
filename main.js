@@ -431,22 +431,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
-  // Trigger Auth Modal directly from "Login" buttons
+  // Trigger Auth Modal directly from "SignUp" buttons
   document.addEventListener('click', (e) => {
     const authBtn = e.target.closest('.auth-modal-trigger');
     if (!authBtn) return;
 
     e.preventDefault();
+    const authErrorBanner = document.getElementById('authErrorBanner');
+    if (authErrorBanner) authErrorBanner.classList.add('hidden');
     if (authGatingBanner) authGatingBanner.classList.add('hidden');
     openModal(authModal);
   });
 
-  // Handle Google OAuth Sign-In Button Click
+  // Handle Google OAuth 2.0 Sign-In / Sign-Up Button Click (GIS Spec)
   if (googleSignInBtn) {
     googleSignInBtn.addEventListener('click', async () => {
       const originalHtml = googleSignInBtn.innerHTML;
+      const authErrorBanner = document.getElementById('authErrorBanner');
+      if (authErrorBanner) authErrorBanner.classList.add('hidden');
+
       googleSignInBtn.innerHTML = `
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spinning" style="animation: spin 1s linear infinite;"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a10 10 0 0 1 10 10"></path></svg>
+        <span class="auth-spinner"></span>
         <span>Connecting to Google...</span>
       `;
       googleSignInBtn.disabled = true;
@@ -454,10 +459,20 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (window.CBA9_BACKEND) {
         const result = await window.CBA9_BACKEND.signInWithGoogle();
         
+        if (result && result.error) {
+          googleSignInBtn.innerHTML = originalHtml;
+          googleSignInBtn.disabled = false;
+          if (authErrorBanner) {
+            authErrorBanner.innerText = typeof result.error === 'string' ? result.error : 'Google sign-in encountered an error. Please try again.';
+            authErrorBanner.classList.remove('hidden');
+          }
+          return;
+        }
+
         // If simulated/instant demo login
         if (result && result.user) {
           closeAllModals();
-          showToast(`Welcome, ${result.user.user_metadata?.full_name || 'Athlete'}! Logged in with Google.`);
+          handleAuthSuccessWelcome(result.user);
           checkAndResumePendingAction(result.user);
         }
       }
@@ -465,6 +480,21 @@ document.addEventListener('DOMContentLoaded', async () => {
       googleSignInBtn.innerHTML = originalHtml;
       googleSignInBtn.disabled = false;
     });
+  }
+
+  // Welcome Toast Notification helper
+  function handleAuthSuccessWelcome(user) {
+    if (!user) return;
+    const fullName = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'Athlete';
+    const firstName = fullName.split(' ')[0];
+    const userKey = 'cba9_athlete_visited_' + (user.id || user.email);
+
+    if (!localStorage.getItem(userKey)) {
+      localStorage.setItem(userKey, 'true');
+      showToast(`Welcome to CBA9Fitness, ${firstName}! 🎉 Your athlete account is now active.`);
+    } else {
+      showToast(`Welcome back, ${firstName}! Ready to train.`);
+    }
   }
 
   // Handle Sign Out
@@ -475,7 +505,115 @@ document.addEventListener('DOMContentLoaded', async () => {
     e.preventDefault();
     if (window.CBA9_BACKEND) {
       await window.CBA9_BACKEND.signOut();
-      showToast('Signed out successfully.');
+      closeAllModals();
+      showToast('You have been signed out safely.');
+    }
+  });
+
+  // Handle Athlete Profile Modal Trigger
+  document.addEventListener('click', async (e) => {
+    const profileBtn = e.target.closest('.profile-modal-trigger');
+    if (!profileBtn) return;
+
+    e.preventDefault();
+    const currentUser = window.CBA9_BACKEND ? await window.CBA9_BACKEND.getCurrentUser() : null;
+    if (!currentUser) {
+      openModal(authModal);
+      return;
+    }
+
+    const profileModal = document.getElementById('profileModal');
+    const profileModalAvatar = document.getElementById('profileModalAvatar');
+    const profileModalName = document.getElementById('profileModalName');
+    const profileModalEmail = document.getElementById('profileModalEmail');
+    const profileModalGoogleId = document.getElementById('profileModalGoogleId');
+
+    const fullName = currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || currentUser.email?.split('@')[0] || 'Athlete';
+    const avatarUrl = currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture;
+    const googleId = currentUser.user_metadata?.provider_id || currentUser.user_metadata?.sub || currentUser.id;
+
+    if (profileModalName) profileModalName.innerText = fullName;
+    if (profileModalEmail) profileModalEmail.innerText = currentUser.email || '';
+    if (profileModalGoogleId) profileModalGoogleId.innerText = googleId;
+    if (profileModalAvatar) {
+      if (avatarUrl) {
+        profileModalAvatar.innerHTML = `<img src="${avatarUrl}" alt="${fullName}">`;
+      } else {
+        profileModalAvatar.innerHTML = `<span>${fullName.charAt(0).toUpperCase()}</span>`;
+      }
+    }
+
+    closeAllModals();
+    openModal(profileModal);
+  });
+
+  // Handle User Plans & Consultations Modal Trigger
+  document.addEventListener('click', async (e) => {
+    const plansBtn = e.target.closest('.user-plans-trigger');
+    if (!plansBtn) return;
+
+    e.preventDefault();
+    const currentUser = window.CBA9_BACKEND ? await window.CBA9_BACKEND.getCurrentUser() : null;
+    if (!currentUser) {
+      openModal(authModal);
+      return;
+    }
+
+    const userPlansModal = document.getElementById('userPlansModal');
+    const container = document.getElementById('userPlansListContainer');
+    
+    closeAllModals();
+    openModal(userPlansModal);
+
+    if (container && window.CBA9_BACKEND) {
+      container.innerHTML = `<div style="text-align: center; padding: 2rem; color: #94A3B8;"><span class="auth-spinner" style="margin-bottom: 0.5rem;"></span><p>Loading your athlete records...</p></div>`;
+      
+      const enrollments = await window.CBA9_BACKEND.fetchUserEnrollments(currentUser.id);
+      const consultations = await window.CBA9_BACKEND.fetchUserConsultations(currentUser.id);
+
+      if ((!enrollments || enrollments.length === 0) && (!consultations || consultations.length === 0)) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 2.5rem 1rem; color: #94A3B8;">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="1.5" style="margin: 0 auto 1rem; display: block;"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            <h4 style="color: #FFFFFF; font-size: 1.1rem; margin-bottom: 0.35rem;">No Active Enrollments Yet</h4>
+            <p style="font-size: 0.88rem; max-width: 320px; margin: 0 auto;">You have not enrolled in any programs or booked a strategy session yet. Get started with our personalized training packages.</p>
+          </div>
+        `;
+      } else {
+        let html = '';
+
+        if (enrollments && enrollments.length > 0) {
+          enrollments.forEach(en => {
+            const dateStr = en.created_at ? new Date(en.created_at).toLocaleDateString() : 'Active';
+            html += `
+              <div class="user-plan-item">
+                <div class="user-plan-info">
+                  <h4>${en.plan_name}</h4>
+                  <p>Enrolled: ${dateStr} • Goal: ${en.primary_goal || 'Fitness Transformation'}</p>
+                </div>
+                <span class="status-badge ${en.status || 'pending'}">${en.status || 'Pending'}</span>
+              </div>
+            `;
+          });
+        }
+
+        if (consultations && consultations.length > 0) {
+          consultations.forEach(c => {
+            const dateStr = c.created_at ? new Date(c.created_at).toLocaleDateString() : 'Scheduled';
+            html += `
+              <div class="user-plan-item">
+                <div class="user-plan-info">
+                  <h4>Strategy Consultation Call</h4>
+                  <p>Requested: ${dateStr} • Topic: ${c.goal || 'General Fitness'}</p>
+                </div>
+                <span class="status-badge scheduled">${c.status || 'Scheduled'}</span>
+              </div>
+            `;
+          });
+        }
+
+        container.innerHTML = html;
+      }
     }
   });
 
@@ -504,17 +642,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!navAuthContainer) return;
 
     if (!user) {
-      // Logged Out State: Sleek Login Button with Google Icon
+      // Logged Out State: Clean Text-Only "SignUp" Button
       navAuthContainer.innerHTML = `
-        <button id="navSignInBtn" class="nav-signin-btn auth-modal-trigger" aria-label="Sign In with Google">
-          <svg class="google-icon" viewBox="0 0 24 24" width="16" height="16">
-            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-          </svg>
-          <span>Login</span>
-        </button>
+        <button id="navSignInBtn" class="nav-signin-btn auth-modal-trigger" aria-label="Sign Up">SignUp</button>
       `;
     } else {
       // Logged In State: Profile Avatar & Interactive Dropdown Menu
@@ -546,21 +676,26 @@ document.addEventListener('DOMContentLoaded', async () => {
               </span>
             </div>
             
+            <button type="button" class="user-dropdown-item profile-modal-trigger">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              <span>My Profile</span>
+            </button>
+
+            <button type="button" class="user-dropdown-item user-plans-trigger">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 5v14M18 5v14M2 9v6M22 9v6M6 12h12M2 12h4M18 12h4"/></svg>
+              <span>My Plans</span>
+            </button>
+
             <a href="#consultModal" class="user-dropdown-item consult-modal-trigger">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
               <span>Book Strategy Call</span>
-            </a>
-
-            <a href="plans.html" class="user-dropdown-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 5v14M18 5v14M2 9v6M22 9v6M6 12h12M2 12h4M18 12h4"/></svg>
-              <span>Training Programs</span>
             </a>
 
             <div class="user-dropdown-divider"></div>
 
             <button type="button" class="user-dropdown-item signout-btn">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-              <span>Sign Out</span>
+              <span>Logout</span>
             </button>
           </div>
         </div>
@@ -616,6 +751,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     window.CBA9_BACKEND.onAuthStateChange((user) => {
       renderNavAuth(user);
+      if (user) {
+        handleAuthSuccessWelcome(user);
+      }
       checkAndResumePendingAction(user);
     });
   }
