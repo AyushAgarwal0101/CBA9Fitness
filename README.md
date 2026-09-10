@@ -33,7 +33,7 @@ A modern, bold fitness and gym training website built with a dark, powerful aest
 - **3-Column Grid**: Session badges, difficulty level indicators, duration, and interactive **"View Plan"** detail popup modals.
 
 ### 4. Meet the Coach (`coach.html`)
-- **Split Hero**: Head Coach Marcus Vance portrait, 12+ years experience badge, certifications (*CSCS, NASM-CPT, Precision Nutrition, FMS*), and coaching philosophy bio.
+- **Split Hero**: Head Coach Arijit Basu portrait, 12+ years experience badge, certifications (*CSCS, NASM-CPT, Precision Nutrition, FMS*), and coaching philosophy bio.
 - **Specialty Matrix**: Strength Training, Nutrition Coaching, Injury Recovery, and Functional Conditioning.
 - **Contact & Consultation**: Direct phone, email, facility address, social links, and an interactive **"Book a Free Consultation"** contact form.
 

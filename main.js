@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
           coachForm.reset();
           submitBtn.innerHTML = originalText;
           submitBtn.disabled = false;
-          showToast('Consultation request sent! Coach Marcus will contact you within 24 hours.');
+          showToast('Consultation request sent! Coach Arijit Basu will contact you within 24 hours.');
         }, 800);
       }
     });
