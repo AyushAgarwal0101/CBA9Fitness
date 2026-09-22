@@ -197,7 +197,25 @@ document.addEventListener('DOMContentLoaded', async () => {
       );
     }
 
-    if (selectedCategory === 'custom-plan' || selectedCategory === 'custom' || selectedCategory === 'smart' || selectedCategory === 'diet') {
+    if (selectedCategory === 'smart') {
+      return (
+        cardCat.includes('smart') ||
+        cardSlug.includes('smart') ||
+        cardName.includes('smart')
+      );
+    }
+
+    if (selectedCategory === 'diet') {
+      return (
+        cardCat.includes('diet') ||
+        cardSlug.includes('diet') ||
+        cardName.includes('diet') ||
+        cardLabel.includes('diet') ||
+        cardLabel.includes('nutrition')
+      );
+    }
+
+    if (selectedCategory === 'custom-plan' || selectedCategory === 'custom') {
       return (
         cardCat.includes('custom') ||
         cardCat.includes('smart') ||
@@ -205,9 +223,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         cardSlug.includes('smart') ||
         cardSlug.includes('diet') ||
         cardName.includes('smart') ||
-        cardName.includes('diet') ||
-        cardLabel.includes('diet') ||
-        cardLabel.includes('workout protocol')
+        cardName.includes('diet')
       );
     }
 

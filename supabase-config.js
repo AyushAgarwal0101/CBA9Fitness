@@ -313,13 +313,153 @@ async function fetchUserConsultations(userId) {
 // ==============================================================================
 // DATABASE METHODS
 // ==============================================================================
+// 7. Training Plans Data & Supabase Synchronization
+// ==============================================================================
 
 /**
- * Fetch all active training programs from Supabase.
+ * Official 6 CBA9Fitness Workout Programs & Pricing from verified flyer.
+ */
+const OFFICIAL_CBA9_PLANS = [
+  {
+    slug: 'smart-plan',
+    name: 'Smart Plan',
+    category: 'custom-plan',
+    category_label: 'Customized Protocol',
+    duration: '1 Month',
+    difficulty: 'All Levels',
+    sessions_per_week: 'Workout Protocol',
+    price: 'Rs 1800/ month',
+    badge: null,
+    is_featured: false,
+    description: 'Customized workout plan with assistance',
+    features: [
+      'Customized Workout Blueprint',
+      'Exercise Form Video Demonstrations',
+      'Progressive Overload Tracking',
+      '24*7 Free Assistance on WhatsApp or Call',
+      'Posture Correction & Injury Prevention Guidance',
+      'Rehab Support: ACL Injury, Slip Disc, Spondylitis'
+    ],
+    display_order: 1
+  },
+  {
+    slug: 'group-training-online',
+    name: 'Group Training - Online',
+    category: 'group',
+    category_label: 'Group • Video Call',
+    duration: '1 Month',
+    difficulty: 'All Levels',
+    sessions_per_week: 'Min 4 - 10 Individuals',
+    price: 'Rs 3000/ month',
+    badge: null,
+    is_featured: false,
+    description: 'Min 4, upto 10 individuals trained over video call',
+    features: [
+      'Trained over Interactive Live Video Call',
+      'Small Batches (Min 4, Up to 10 Individuals)',
+      'Real-Time Posture & Technique Correction',
+      'High-Energy Group Motivation & Accountability',
+      'Structured Periodized Strength & Conditioning',
+      'Monthly Fitness & Progress Assessment'
+    ],
+    display_order: 2
+  },
+  {
+    slug: 'group-training-offline',
+    name: 'Group Training - Offline',
+    category: 'group',
+    category_label: 'Group • In-Person',
+    duration: '1 Month',
+    difficulty: 'All Levels',
+    sessions_per_week: 'Min 4 - 10 Individuals',
+    price: 'Rs 6000/ month',
+    badge: 'In-Person Batch',
+    is_featured: false,
+    description: 'Min 4, upto 10 individuals trained offline',
+    features: [
+      'In-Person Facility / Gym Group Training',
+      'Small Batches (Min 4, Up to 10 Individuals)',
+      'Hands-on Technique & Posture Coaching',
+      'Advanced Equipment & Strength Training',
+      'Rehab-Safe Group Exercise Modalities',
+      'Monthly Progress & Body Recomposition Checks'
+    ],
+    display_order: 3
+  },
+  {
+    slug: 'online-training-1x1',
+    name: 'Online Training',
+    category: 'personal',
+    category_label: '1x1 Private • Video Call',
+    duration: '1 Month',
+    difficulty: 'All Levels',
+    sessions_per_week: '1x1 Private Video',
+    price: 'Rs 4500/ month',
+    badge: 'Most Popular',
+    is_featured: true,
+    description: '1x1 Private workout session over video call',
+    features: [
+      '1x1 Private Workout Session over Video Call',
+      '100% Dedicated 1-on-1 Coach Attention',
+      'Custom Periodized Workout Progression',
+      'Live Real-Time Form & Posture Correction',
+      'Supplements Consultation & Habit Coaching',
+      '24*7 Priority Assistance on WhatsApp or Call'
+    ],
+    display_order: 4
+  },
+  {
+    slug: 'offline-training-1x1',
+    name: 'Offline Training',
+    category: 'personal',
+    category_label: '1x1 Private • In-Person',
+    duration: '1 Month',
+    difficulty: 'All Levels',
+    sessions_per_week: '1x1 In-Person',
+    price: 'Rs 8000/ month',
+    badge: 'Elite 1x1',
+    is_featured: true,
+    description: '1x1 Private workout session offline',
+    features: [
+      '1x1 Private In-Person Coaching Session',
+      'Direct Hands-on Biomechanical Guidance',
+      'Specialized Rehab: ACL Injury, Slip Disc, Spondylitis',
+      'Complete Physique Transformation Blueprint',
+      'Clinical & Therapeutic Lifestyle Synergy',
+      '24*7 Priority Coach Access'
+    ],
+    display_order: 5
+  },
+  {
+    slug: 'diet-plan',
+    name: 'Diet Plan',
+    category: 'custom-plan',
+    category_label: 'Nutrition Protocol',
+    duration: '1 Month',
+    difficulty: 'All Levels',
+    sessions_per_week: 'Diet Protocol',
+    price: 'Rs 1500 / month',
+    badge: null,
+    is_featured: false,
+    description: 'Customized diet plan with assistance',
+    features: [
+      'Customized Macro & Caloric Nutrition Protocol',
+      'Clinical or Therapeutic Diet (PCOS, Thyroid, etc.)',
+      'Pre and Post Natal Nutritional Guidance',
+      'Supplements Strategy Consultation',
+      'Easy-to-Follow Indian & Global Meal Plans',
+      '24*7 Free Assistance on WhatsApp or Call'
+    ],
+    display_order: 6
+  }
+];
+
+/**
+ * Fetch all active training programs from Supabase (with verified fallback to official 6 plans).
  */
 async function fetchActivePlansFromDB() {
   const supabase = getSupabaseClient();
-  if (!supabase) return null;
+  if (!supabase) return OFFICIAL_CBA9_PLANS;
 
   try {
     const { data, error } = await supabase
@@ -329,10 +469,20 @@ async function fetchActivePlansFromDB() {
       .order('display_order', { ascending: true });
 
     if (error) throw error;
-    return data;
+    
+    // Check if the returned data is the new 6-tier schema or legacy data
+    if (data && data.length >= 6) {
+      const hasOldSlug = data.some(p => p.slug === 'monthly-package' || p.slug === '3-months-package');
+      if (!hasOldSlug) {
+        return data;
+      }
+    }
+    
+    // If Supabase database still holds legacy seed or empty rows, return the official 6 plans
+    return OFFICIAL_CBA9_PLANS;
   } catch (err) {
-    console.error('❌ Supabase fetchActivePlans error:', err);
-    return null;
+    console.warn('ℹ️ Using verified official CBA9Fitness plans:', err.message || err);
+    return OFFICIAL_CBA9_PLANS;
   }
 }
 
