@@ -365,89 +365,32 @@ document.addEventListener('DOMContentLoaded', async () => {
     openModal(planModal);
   });
 
-  // Handle "Enroll In Plan" button inside Plan Details Modal (GATED BY GOOGLE AUTH)
+  // Handle "Enroll In Plan" button inside Plan Details Modal
   if (planModalEnrollBtn) {
-    planModalEnrollBtn.addEventListener('click', async (e) => {
+    planModalEnrollBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      
-      const currentUser = window.CBA9_BACKEND ? await window.CBA9_BACKEND.getCurrentUser() : null;
-
-      if (!currentUser) {
-        // Gated: User must sign in with Google first
-        sessionStorage.setItem('cba9_pending_action', JSON.stringify({
-          type: 'enrollment',
-          plan: currentSelectedPlan
-        }));
-
-        if (authGatingMsg) {
-          authGatingMsg.innerText = `Please sign in with Google to enroll in ${currentSelectedPlan.name}.`;
-        }
-        if (authGatingBanner) authGatingBanner.classList.remove('hidden');
-
-        closeAllModals();
-        openModal(authModal);
-        return;
-      }
-
-      // User is authenticated: Open Enrollment Form with prefilled Google account data
       closeAllModals();
       if (enrollModal) {
         if (enrollModalTitle) enrollModalTitle.innerText = `JOIN ${currentSelectedPlan.name.toUpperCase()}`;
         if (enrollPlanNameInput) enrollPlanNameInput.value = currentSelectedPlan.name;
         if (enrollPlanSlugInput) enrollPlanSlugInput.value = currentSelectedPlan.slug;
-
-        const nameInput = document.getElementById('enrollName');
-        const emailInput = document.getElementById('enrollEmail');
-        if (nameInput && !nameInput.value) {
-          nameInput.value = currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || '';
-        }
-        if (emailInput && !emailInput.value) {
-          emailInput.value = currentUser.email || '';
-        }
-
         openModal(enrollModal);
       }
     });
   }
 
   // ==========================================================================
-  // 6. Consultation Booking Modal Triggers (GATED BY GOOGLE AUTH)
+  // 6. Consultation Booking Modal Triggers
   // ==========================================================================
   const consultModal = document.getElementById('consultModal');
 
-  document.addEventListener('click', async (e) => {
+  document.addEventListener('click', (e) => {
     const trigger = e.target.closest('.consult-modal-trigger');
     if (!trigger) return;
 
     e.preventDefault();
-    const currentUser = window.CBA9_BACKEND ? await window.CBA9_BACKEND.getCurrentUser() : null;
-
-    if (!currentUser) {
-      // Gated: User must sign in with Google first
-      sessionStorage.setItem('cba9_pending_action', JSON.stringify({
-        type: 'consultation'
-      }));
-
-      if (authGatingMsg) {
-        authGatingMsg.innerText = 'Please sign in with Google to book your free strategy consultation.';
-      }
-      if (authGatingBanner) authGatingBanner.classList.remove('hidden');
-
-      closeAllModals();
-      openModal(authModal);
-      return;
-    }
-
-    // User is authenticated: Pre-fill and open consultation modal
+    closeAllModals();
     if (consultModal) {
-      const nameInput = consultModal.querySelector('input[type="text"]');
-      const emailInput = consultModal.querySelector('input[type="email"]');
-      if (nameInput) {
-        nameInput.value = currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || '';
-      }
-      if (emailInput) {
-        emailInput.value = currentUser.email || '';
-      }
       openModal(consultModal);
     }
   });
@@ -923,16 +866,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       if (!checkFormRateLimit('enrollForm')) return;
 
-      // Check Authentication Before Submission
-      const currentUser = window.CBA9_BACKEND ? await window.CBA9_BACKEND.getCurrentUser() : null;
-      if (!currentUser) {
-        closeAllModals();
-        if (authGatingMsg) authGatingMsg.innerText = 'Please sign in with Google to complete your program enrollment.';
-        if (authGatingBanner) authGatingBanner.classList.remove('hidden');
-        openModal(authModal);
-        return;
-      }
-
       const rawPlanName = enrollPlanNameInput ? enrollPlanNameInput.value : currentSelectedPlan.name;
       const rawPlanSlug = enrollPlanSlugInput ? enrollPlanSlugInput.value : currentSelectedPlan.slug;
       const rawName = document.getElementById('enrollName')?.value || '';
@@ -952,7 +885,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
       }
       if (rawPhone && !isValidPhone(rawPhone)) {
-        showToast('Please enter a valid phone number (e.g. +1 234 567 8900).');
+        showToast('Please enter a valid phone number (e.g. +91 98765 43210).');
         return;
       }
 
@@ -985,7 +918,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           fitnessLevel,
           goal,
           notes,
-          userId: currentUser.id
+          userId: null
         });
       }
 
@@ -995,7 +928,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         submitBtn.disabled = false;
       }
       closeAllModals();
-      showToast(`Enrollment confirmed for ${planName}! Check your email for details.`);
+      showToast(`Enrollment request received for ${planName}! Coach Arijit will reach out via WhatsApp / Call.`);
     });
   }
 
@@ -1006,15 +939,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       e.preventDefault();
 
       if (!checkFormRateLimit('coachContactForm')) return;
-
-      // Check Authentication Before Submission
-      const currentUser = window.CBA9_BACKEND ? await window.CBA9_BACKEND.getCurrentUser() : null;
-      if (!currentUser) {
-        if (authGatingMsg) authGatingMsg.innerText = 'Please sign in with Google to message Coach Arijit Basu.';
-        if (authGatingBanner) authGatingBanner.classList.remove('hidden');
-        openModal(authModal);
-        return;
-      }
 
       const rawName = document.getElementById('contactName')?.value || '';
       const rawEmail = document.getElementById('contactEmail')?.value || '';
@@ -1057,7 +981,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           goal,
           message,
           source: 'coach_contact_form',
-          userId: currentUser.id
+          userId: null
         });
       }
 
@@ -1077,16 +1001,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       e.preventDefault();
 
       if (!checkFormRateLimit('modalConsultForm')) return;
-
-      // Check Authentication Before Submission
-      const currentUser = window.CBA9_BACKEND ? await window.CBA9_BACKEND.getCurrentUser() : null;
-      if (!currentUser) {
-        closeAllModals();
-        if (authGatingMsg) authGatingMsg.innerText = 'Please sign in with Google to confirm your strategy call.';
-        if (authGatingBanner) authGatingBanner.classList.remove('hidden');
-        openModal(authModal);
-        return;
-      }
 
       const rawName = consultModalForm.querySelector('input[type="text"]')?.value || '';
       const rawEmail = consultModalForm.querySelector('input[type="email"]')?.value || '';
@@ -1122,7 +1036,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           email,
           goal,
           source: 'modal_consult_form',
-          userId: currentUser.id
+          userId: null
         });
       }
 
@@ -1132,7 +1046,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         submitBtn.disabled = false;
       }
       closeAllModals();
-      showToast('Free consultation scheduled! Check your inbox for confirmation details.');
+      showToast('Strategy call booked! Coach Arijit will reach out via WhatsApp or call.');
     });
   }
 
