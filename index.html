@@ -261,36 +261,36 @@
         <!-- Filter Tabs -->
         <div class="plans-filter-bar">
           <button class="filter-btn active" data-category="all">All Packages</button>
-          <button class="filter-btn" data-category="monthly">Monthly</button>
-          <button class="filter-btn" data-category="3months">3 Months</button>
-          <button class="filter-btn" data-category="6months">6 Months</button>
-          <button class="filter-btn" data-category="yearly">Yearly</button>
-          <button class="filter-btn" data-category="smart">Smart Package</button>
+          <button class="filter-btn" data-category="personal">1x1 Personal</button>
+          <button class="filter-btn" data-category="group">Group Training</button>
+          <button class="filter-btn" data-category="custom-plan">Custom Plans</button>
+          <button class="filter-btn" data-category="online">Online</button>
+          <button class="filter-btn" data-category="offline">Offline</button>
         </div>
 
         <!-- 3-Column Plans Grid -->
         <div class="plans-grid">
 
-          <!-- Plan 1: Monthly Package -->
+          <!-- Plan 1: Smart Plan -->
           <div class="plan-card" 
-               data-category="monthly"
-               data-slug="monthly-package"
-               data-name="Monthly Package"
-               data-category-label="Personal Training • 1 Month"
+               data-category="custom-plan online"
+               data-slug="smart-plan"
+               data-name="Smart Plan"
+               data-category-label="Workout Protocol • Online Assistance"
                data-duration="1 Month"
                data-difficulty="All Levels"
-               data-price="Online: ₹4,000/mo • Offline: ₹8,000/mo"
-               data-desc="12 hours of dedicated personal training with customized workout and diet plans, posture analysis, rehab guidance, and 24*7 support."
-               data-features="12 hours Personal Training Class|Customized Workout Plan|Personalized Diet Plan|Pre and Post Natal Exercise Plan|Supplements Consultation|Clinical or Therapeutic Diet|Fitness Testing once per month|Progress Check in every one month|24*7 Free assistance on WhatsApp or Call|Understanding body posture during workout|Rehab Related Workouts: ACL Injury, Slip Disc, Spondylitis, etc.">
+               data-price="Rs 1800/ month"
+               data-desc="Customized workout plan with dedicated assistance and progress tracking tailored to your personal goals and schedule."
+               data-features="Customized Workout Blueprint|Exercise Form Video Demonstrations|Progressive Overload Tracking|24*7 Free Assistance on WhatsApp or Call|Posture Correction & Injury Prevention Guidance|Rehab Support: ACL Injury, Slip Disc, Spondylitis">
             <div class="plan-header">
               <div class="plan-icon-wrapper">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M6 5v14M18 5v14M2 9v6M22 9v6M6 12h12M2 12h4M18 12h4"/>
+                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                 </svg>
               </div>
-              <span class="plan-badge">12 Hours PT</span>
+              <span class="plan-badge">Workout Protocol</span>
             </div>
-            <h3 class="plan-name">Monthly Package</h3>
+            <h3 class="plan-name">Smart Plan</h3>
             <div class="plan-tags">
               <span class="plan-tag">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
@@ -298,184 +298,238 @@
               </span>
               <span class="plan-tag" style="color: #60A5FA;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                All Levels
+                Customized
               </span>
             </div>
-            <p class="plan-desc">12 hours of dedicated personal training with customized workout & diet plans, posture analysis, and 24*7 support.</p>
+            <p class="plan-desc">Customized workout plan with assistance, video demos, and 24*7 WhatsApp coach support.</p>
             <div class="plan-footer">
               <div class="plan-pricing">
-                <span class="pricing-amount" style="font-size: 1.15rem;">Online: ₹4,000<span style="font-size: 0.78rem; font-weight: normal; color: var(--text-muted);">/mo</span></span>
-                <span class="pricing-sub" style="color: #94A3B8; font-weight: 500;">Offline: ₹8,000/mo</span>
+                <span class="pricing-amount" style="font-size: 1.35rem; font-weight: 700; color: #FFFFFF;">Rs 1800<span style="font-size: 0.82rem; font-weight: normal; color: var(--text-muted);">/ month</span></span>
               </div>
               <button class="btn btn-primary view-plan-trigger" style="padding: 0.6rem 1.1rem; font-size: 0.85rem;">View Plan</button>
             </div>
           </div>
 
-          <!-- Plan 2: 3 Months Package -->
-          <div class="plan-card featured" 
-               data-category="3months"
-               data-slug="3-months-package"
-               data-name="3 Months Package"
-               data-category-label="Personal Training • 3 Months"
-               data-duration="3 Months"
+          <!-- Plan 2: Group Training - Online -->
+          <div class="plan-card" 
+               data-category="group online"
+               data-slug="group-training-online"
+               data-name="Group Training - Online"
+               data-category-label="Group Training • Live Video Call"
+               data-duration="1 Month"
                data-difficulty="All Levels"
-               data-price="Online: ₹3,500/mo • Offline: ₹7,000/mo"
-               data-desc="36 hours of progressive personal training structured over 3 months for transformation, clinical nutrition, and body recomposition."
-               data-features="36 hours Personal Training Class|Customized Workout Plan|Personalized Diet Plan|Pre and Post Natal Exercise Plan|Supplements Consultation|Clinical or Therapeutic Diet|Fitness Testing once per month|Progress Check in every one month|24*7 Free assistance on WhatsApp or Call|Understanding body posture during workout|Rehab Related Workouts: ACL Injury, Slip Disc, Spondylitis, etc.">
+               data-price="Rs 3000/ month"
+               data-desc="High-energy group workout sessions conducted live over interactive video call with min 4, up to 10 individuals per batch."
+               data-features="Trained over Interactive Live Video Call|Small Batches (Min 4, Up to 10 Individuals)|Real-Time Posture & Technique Correction|High-Energy Group Motivation & Accountability|Structured Periodized Strength & Conditioning|Monthly Fitness & Progress Assessment">
+            <div class="plan-header">
+              <div class="plan-icon-wrapper">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </div>
+              <span class="plan-badge">4-10 Athletes</span>
+            </div>
+            <h3 class="plan-name">Group Training - Online</h3>
+            <div class="plan-tags">
+              <span class="plan-tag">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                1 Month
+              </span>
+              <span class="plan-tag" style="color: #60A5FA;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                Live Video Call
+              </span>
+            </div>
+            <p class="plan-desc">Min 4, upto 10 individuals trained over live video call with high-energy coaching and real-time form checks.</p>
+            <div class="plan-footer">
+              <div class="plan-pricing">
+                <span class="pricing-amount" style="font-size: 1.35rem; font-weight: 700; color: #FFFFFF;">Rs 3000<span style="font-size: 0.82rem; font-weight: normal; color: var(--text-muted);">/ month</span></span>
+              </div>
+              <button class="btn btn-primary view-plan-trigger" style="padding: 0.6rem 1.1rem; font-size: 0.85rem;">View Plan</button>
+            </div>
+          </div>
+
+          <!-- Plan 3: Group Training - Offline -->
+          <div class="plan-card" 
+               data-category="group offline"
+               data-slug="group-training-offline"
+               data-name="Group Training - Offline"
+               data-category-label="In-Person Group Training • Facility"
+               data-duration="1 Month"
+               data-difficulty="All Levels"
+               data-price="Rs 6000/ month"
+               data-desc="In-person group strength and conditioning classes at the training facility with min 4, up to 10 individuals per batch."
+               data-features="In-Person Facility / Gym Group Training|Small Batches (Min 4, Up to 10 Individuals)|Hands-on Technique & Posture Coaching|Advanced Equipment & Strength Training|Rehab-Safe Group Exercise Modalities|Monthly Progress & Body Recomposition Checks">
+            <div class="plan-header">
+              <div class="plan-icon-wrapper">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </div>
+              <span class="plan-badge">In-Person Batch</span>
+            </div>
+            <h3 class="plan-name">Group Training - Offline</h3>
+            <div class="plan-tags">
+              <span class="plan-tag">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                1 Month
+              </span>
+              <span class="plan-tag" style="color: #60A5FA;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                Facility / Gym
+              </span>
+            </div>
+            <p class="plan-desc">Min 4, upto 10 individuals trained offline with hands-on posture coaching, strength equipment, and group synergy.</p>
+            <div class="plan-footer">
+              <div class="plan-pricing">
+                <span class="pricing-amount" style="font-size: 1.35rem; font-weight: 700; color: #FFFFFF;">Rs 6000<span style="font-size: 0.82rem; font-weight: normal; color: var(--text-muted);">/ month</span></span>
+              </div>
+              <button class="btn btn-primary view-plan-trigger" style="padding: 0.6rem 1.1rem; font-size: 0.85rem;">View Plan</button>
+            </div>
+          </div>
+
+          <!-- Plan 4: Online Training (1x1 Private) -->
+          <div class="plan-card featured" 
+               data-category="personal online"
+               data-slug="online-training-1x1"
+               data-name="Online Training"
+               data-category-label="1x1 Private • Live Video Call"
+               data-duration="1 Month"
+               data-difficulty="All Levels"
+               data-price="Rs 4500/ month"
+               data-desc="1x1 Private workout session over video call with Coach Arijit Basu for focused, individualized coaching and maximum results."
+               data-features="1x1 Private Workout Session over Video Call|100% Dedicated 1-on-1 Coach Attention|Custom Periodized Workout Progression|Live Real-Time Form & Posture Correction|Supplements Consultation & Habit Coaching|24*7 Priority Assistance on WhatsApp or Call">
             <div class="featured-pill">Most Popular</div>
             <div class="plan-header">
               <div class="plan-icon-wrapper">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle>
                 </svg>
               </div>
-              <span class="plan-badge">36 Hours PT</span>
+              <span class="plan-badge">1x1 Private Video</span>
             </div>
-            <h3 class="plan-name">3 Months Package</h3>
+            <h3 class="plan-name">Online Training</h3>
             <div class="plan-tags">
               <span class="plan-tag">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                3 Months
+                1 Month
               </span>
               <span class="plan-tag" style="color: #60A5FA;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                All Levels
+                1-on-1 Dedicated
               </span>
             </div>
-            <p class="plan-desc">36 hours of progressive personal training structured over 3 months for physique transformation and clinical nutrition.</p>
+            <p class="plan-desc">1x1 Private workout session over video call with real-time coaching, tailored progressions, and personal attention.</p>
             <div class="plan-footer">
               <div class="plan-pricing">
-                <span class="pricing-amount" style="font-size: 1.15rem;">Online: ₹3,500<span style="font-size: 0.78rem; font-weight: normal; color: var(--text-muted);">/mo</span></span>
-                <span class="pricing-sub" style="color: #94A3B8; font-weight: 500;">Offline: ₹7,000/mo</span>
+                <span class="pricing-amount" style="font-size: 1.35rem; font-weight: 700; color: #FFFFFF;">Rs 4500<span style="font-size: 0.82rem; font-weight: normal; color: var(--text-muted);">/ month</span></span>
               </div>
               <button class="btn btn-primary view-plan-trigger" style="padding: 0.6rem 1.1rem; font-size: 0.85rem;">View Plan</button>
             </div>
           </div>
 
-          <!-- Plan 3: 6 Months Package -->
+          <!-- Plan 5: Offline Training (1x1 Private) -->
           <div class="plan-card featured" 
-               data-category="6months"
-               data-slug="6-months-package"
-               data-name="6 Months Package"
-               data-category-label="Personal Training • 6 Months"
-               data-duration="6 Months"
+               data-category="personal offline"
+               data-slug="offline-training-1x1"
+               data-name="Offline Training"
+               data-category-label="1x1 Private • In-Person Coaching"
+               data-duration="1 Month"
                data-difficulty="All Levels"
-               data-price="Online: ₹3,000/mo • Offline: ₹6,000/mo"
-               data-desc="72 hours of dedicated personal training, long-term body recomposition, postural restoration, and continuous monthly progress checks."
-               data-features="72 hours Personal Training Class|Customized Workout Plan|Personalized Diet Plan|Pre and Post Natal Exercise Plan|Supplements Consultation|Clinical or Therapeutic Diet|Fitness Testing once per month|Progress Check in every one month|24*7 Free assistance on WhatsApp or Call|Understanding body posture during workout|Rehab Related Workouts: ACL Injury, Slip Disc, Spondylitis, etc.">
-            <div class="featured-pill">Best Value</div>
+               data-price="Rs 8000/ month"
+               data-desc="1x1 Private workout session offline with hands-on coaching, specialized rehabilitation protocols, and complete physique transformation."
+               data-features="1x1 Private In-Person Coaching Session|Direct Hands-on Biomechanical Guidance|Specialized Rehab: ACL Injury, Slip Disc, Spondylitis|Complete Physique Transformation Blueprint|Clinical & Therapeutic Lifestyle Synergy|24*7 Priority Coach Access">
+            <div class="featured-pill">Elite 1x1</div>
             <div class="plan-header">
               <div class="plan-icon-wrapper">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="2" y="6" width="20" height="12" rx="2"></rect>
-                  <path d="M6 12h12"></path>
+                  <path d="M6 5v14M18 5v14M2 9v6M22 9v6M6 12h12M2 12h4M18 12h4"/>
                 </svg>
               </div>
-              <span class="plan-badge">72 Hours PT</span>
+              <span class="plan-badge">1x1 In-Person</span>
             </div>
-            <h3 class="plan-name">6 Months Package</h3>
+            <h3 class="plan-name">Offline Training</h3>
             <div class="plan-tags">
               <span class="plan-tag">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                6 Months
+                1 Month
               </span>
               <span class="plan-tag" style="color: #60A5FA;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                All Levels
+                In-Person Elite
               </span>
             </div>
-            <p class="plan-desc">72 hours of personal training, long-term body recomposition, postural restoration, and continuous monthly checks.</p>
+            <p class="plan-desc">1x1 Private workout session offline with hands-on biomechanical correction and specialized injury rehab protocols.</p>
             <div class="plan-footer">
               <div class="plan-pricing">
-                <span class="pricing-amount" style="font-size: 1.15rem;">Online: ₹3,000<span style="font-size: 0.78rem; font-weight: normal; color: var(--text-muted);">/mo</span></span>
-                <span class="pricing-sub" style="color: #94A3B8; font-weight: 500;">Offline: ₹6,000/mo</span>
+                <span class="pricing-amount" style="font-size: 1.35rem; font-weight: 700; color: #FFFFFF;">Rs 8000<span style="font-size: 0.82rem; font-weight: normal; color: var(--text-muted);">/ month</span></span>
               </div>
               <button class="btn btn-primary view-plan-trigger" style="padding: 0.6rem 1.1rem; font-size: 0.85rem;">View Plan</button>
             </div>
           </div>
 
-          <!-- Plan 4: Yearly Package -->
-          <div class="plan-card featured" 
-               data-category="yearly"
-               data-slug="yearly-package"
-               data-name="Yearly Package"
-               data-category-label="Personal Training • 12 Months"
-               data-duration="12 Months"
-               data-difficulty="All Levels"
-               data-price="Online: ₹2,300/mo • Offline: ₹4,800/mo"
-               data-desc="144 hours of elite personal coaching for total lifestyle & physique mastery with our lowest monthly coaching rates."
-               data-features="144 hours Personal Training Class|Customized Workout Plan|Personalized Diet Plan|Pre and Post Natal Exercise Plan|Supplements Consultation|Clinical or Therapeutic Diet|Fitness Testing once per month|Progress Check in every one month|24*7 Free assistance on WhatsApp or Call|Understanding body posture during workout|Rehab Related Workouts: ACL Injury, Slip Disc, Spondylitis, etc.">
-            <div class="featured-pill">Maximum Savings</div>
-            <div class="plan-header">
-              <div class="plan-icon-wrapper">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                </svg>
-              </div>
-              <span class="plan-badge">144 Hours PT</span>
-            </div>
-            <h3 class="plan-name">Yearly Package</h3>
-            <div class="plan-tags">
-              <span class="plan-tag">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                12 Months
-              </span>
-              <span class="plan-tag" style="color: #60A5FA;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                All Levels
-              </span>
-            </div>
-            <p class="plan-desc">144 hours of elite personal coaching for total lifestyle and physique transformation at maximum discount.</p>
-            <div class="plan-footer">
-              <div class="plan-pricing">
-                <span class="pricing-amount" style="font-size: 1.15rem;">Online: ₹2,300<span style="font-size: 0.78rem; font-weight: normal; color: var(--text-muted);">/mo</span></span>
-                <span class="pricing-sub" style="color: #94A3B8; font-weight: 500;">Offline: ₹4,800/mo</span>
-              </div>
-              <button class="btn btn-primary view-plan-trigger" style="padding: 0.6rem 1.1rem; font-size: 0.85rem;">View Plan</button>
-            </div>
-          </div>
-
-          <!-- Plan 5: Smart Package -->
+          <!-- Plan 6: Diet Plan -->
           <div class="plan-card" 
-               data-category="smart"
-               data-slug="smart-package"
-               data-name="Smart Package"
-               data-category-label="Workout & Diet Protocol"
-               data-duration="6 or 12 Months"
+               data-category="custom-plan online"
+               data-slug="diet-plan"
+               data-name="Diet Plan"
+               data-category-label="Customized Nutrition Protocol"
+               data-duration="1 Month"
                data-difficulty="All Levels"
-               data-price="12 Mos: ₹1,000/mo • 6 Mos: ₹1,400/mo"
-               data-desc="Expert-crafted customized workout & diet blueprints with 24*7 WhatsApp/call assistance and rehab support for self-driven athletes."
-               data-features="Customized Workout Plans|Personalized Diet Plans|Pre and Post Natal Exercise Plan|Supplements Consultation|Clinical or Therapeutic Diet|24*7 Free assistance on WhatsApp or Call|Rehab Related Workouts: ACL Injury, Slip Disc, Spondylitis, etc.">
+               data-price="Rs 1500 / month"
+               data-desc="Customized diet plan with assistance, tailored to your dietary preferences, metabolism, and health transformation goals."
+               data-features="Customized Macro & Caloric Nutrition Protocol|Clinical or Therapeutic Diet (PCOS, Thyroid, etc.)|Pre and Post Natal Nutritional Guidance|Supplements Strategy Consultation|Easy-to-Follow Indian & Global Meal Plans|24*7 Free Assistance on WhatsApp or Call">
             <div class="plan-header">
               <div class="plan-icon-wrapper">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line>
                 </svg>
               </div>
-              <span class="plan-badge">Diet + Workout</span>
+              <span class="plan-badge">Diet Protocol</span>
             </div>
-            <h3 class="plan-name">Smart Package</h3>
+            <h3 class="plan-name">Diet Plan</h3>
             <div class="plan-tags">
               <span class="plan-tag">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                6 / 12 Months
+                1 Month
               </span>
               <span class="plan-tag" style="color: #34D399;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                All Levels
+                Nutrition & Macros
               </span>
             </div>
-            <p class="plan-desc">Customized workout & diet plans with 24*7 WhatsApp support and injury rehab guidance for self-driven training.</p>
+            <p class="plan-desc">Customized diet plan with continuous assistance, clinical diet options (PCOS, thyroid), and supplement strategy.</p>
             <div class="plan-footer">
               <div class="plan-pricing">
-                <span class="pricing-amount" style="font-size: 1.15rem;">12 Mos: ₹1,000<span style="font-size: 0.78rem; font-weight: normal; color: var(--text-muted);">/mo</span></span>
-                <span class="pricing-sub" style="color: #94A3B8; font-weight: 500;">6 Mos: ₹1,400/mo</span>
+                <span class="pricing-amount" style="font-size: 1.35rem; font-weight: 700; color: #FFFFFF;">Rs 1500<span style="font-size: 0.82rem; font-weight: normal; color: var(--text-muted);">/ month</span></span>
               </div>
               <button class="btn btn-outline view-plan-trigger" style="padding: 0.6rem 1.1rem; font-size: 0.85rem;">View Plan</button>
             </div>
           </div>
 
         </div>
+
+        <!-- Special Exclusive Discounts & Free Trial Banner -->
+        <div class="promo-discount-banner">
+          <div class="promo-banner-content">
+            <div class="promo-tag-pill">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              Staying fit is now cheaper than your daily coffee
+            </div>
+            <h3 class="promo-banner-title">Don't Just Dream It, Go Get It</h3>
+            <p class="promo-banner-text">Call / WhatsApp <strong>+91-6290268354</strong> for exclusive discounts on <strong>3, 6 &amp; 12-month packages</strong>. Book your free trial class today!</p>
+          </div>
+          <div class="promo-banner-actions">
+            <a href="https://wa.me/916290268354?text=Hi%20Coach%20Arijit,%20I'm%20interested%20in%20exclusive%20discounts%20on%203,%206%20&%2012-month%20packages%20and%20booking%20a%20free%20trial%20class!" target="_blank" rel="noopener noreferrer" class="btn-whatsapp-promo">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+              WhatsApp for Discounts
+            </a>
+            <a href="tel:+916290268354" class="btn btn-white" style="font-size: 0.88rem; padding: 0.7rem 1.2rem;">
+              Call +91 6290268354
+            </a>
+          </div>
+        </div>
+      </div>
       </div>
     </section>
 

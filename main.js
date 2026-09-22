@@ -77,71 +77,73 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ==========================================================================
   // 3. Supabase Dynamic Training Plans Loading & Rendering
   // ==========================================================================
-  const plansContainer = document.querySelector('.plans-grid');
+  // ==========================================================================
+  // 3. Supabase Dynamic Training Plans Loading & Rendering
+  // ==========================================================================
+  const plansGrids = document.querySelectorAll('.plans-grid');
 
   async function loadDynamicPlansFromSupabase() {
-    if (!window.CBA9_BACKEND || !plansContainer) return;
+    if (!window.CBA9_BACKEND || !plansGrids || plansGrids.length === 0) return;
 
     const dbPlans = await window.CBA9_BACKEND.fetchActivePlans();
     if (dbPlans && dbPlans.length > 0) {
       console.log(`⚡ Supabase: Loaded ${dbPlans.length} active plans from database.`);
       
-      // Render plans dynamically
-      plansContainer.innerHTML = '';
-      dbPlans.forEach(plan => {
-        const featuresArray = Array.isArray(plan.features) ? plan.features : [];
-        const featuresAttr = featuresArray.join('|');
-        const isFeatured = plan.badge ? 'featured' : '';
-        const badgeHtml = plan.badge ? `<div class="featured-pill">${plan.badge}</div>` : '';
+      plansGrids.forEach(container => {
+        container.innerHTML = '';
+        dbPlans.forEach(plan => {
+          const featuresArray = Array.isArray(plan.features) ? plan.features : [];
+          const featuresAttr = featuresArray.join('|');
+          const isFeatured = plan.badge ? 'featured' : '';
+          const badgeHtml = plan.badge ? `<div class="featured-pill">${plan.badge}</div>` : '';
 
-        const card = document.createElement('div');
-        card.className = `plan-card ${isFeatured}`;
-        card.setAttribute('data-category', normalizeCategory(plan.category));
-        card.setAttribute('data-slug', plan.slug);
-        card.setAttribute('data-name', plan.name);
-        card.setAttribute('data-category-label', plan.category_label);
-        card.setAttribute('data-duration', plan.duration);
-        card.setAttribute('data-difficulty', plan.difficulty);
-        card.setAttribute('data-price', `${plan.price} • ${plan.sessions_per_week}`);
-        card.setAttribute('data-desc', plan.description);
-        card.setAttribute('data-features', featuresAttr);
+          const card = document.createElement('div');
+          card.className = `plan-card ${isFeatured}`;
+          card.setAttribute('data-category', normalizeCategory(plan.category));
+          card.setAttribute('data-slug', plan.slug);
+          card.setAttribute('data-name', plan.name);
+          card.setAttribute('data-category-label', plan.category_label);
+          card.setAttribute('data-duration', plan.duration);
+          card.setAttribute('data-difficulty', plan.difficulty);
+          card.setAttribute('data-price', plan.price);
+          card.setAttribute('data-desc', plan.description);
+          card.setAttribute('data-features', featuresAttr);
 
-        const priceParts = (plan.price || '').split('•');
-        const priceHtml = priceParts.length > 1
-          ? `<div class="plan-pricing">
-               <span class="pricing-amount" style="font-size: 1.15rem;">${priceParts[0].trim()}</span>
-               <span class="pricing-sub" style="color: #94A3B8; font-weight: 500;">${priceParts[1].trim()}</span>
-             </div>`
-          : `<div class="plan-pricing"><span class="pricing-amount" style="font-size: 1.15rem;">${plan.price}</span></div>`;
+          const iconSvg = plan.category === 'personal' || plan.slug.includes('1x1')
+            ? `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`
+            : (plan.category === 'group' || plan.slug.includes('group')
+              ? `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`
+              : `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`);
 
-        card.innerHTML = `
-          ${badgeHtml}
-          <div class="plan-header">
-            <div class="plan-icon-wrapper">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M6 5v14M18 5v14M2 9v6M22 9v6M6 12h12M2 12h4M18 12h4"/>
-              </svg>
+          card.innerHTML = `
+            ${badgeHtml}
+            <div class="plan-header">
+              <div class="plan-icon-wrapper">
+                ${iconSvg}
+              </div>
+              <span class="plan-badge">${plan.sessions_per_week || 'Workout Program'}</span>
             </div>
-            <span class="plan-badge">${plan.sessions_per_week}</span>
-          </div>
-          <h3 class="plan-name">${plan.name}</h3>
-          <div class="plan-tags">
-            <span class="plan-tag">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-              ${plan.duration}
-            </span>
-            <span class="plan-tag" style="color: #60A5FA;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-              ${plan.difficulty}
-            </span>
-          </div>
-          <p class="plan-desc">${plan.description}</p>
-          <div class="plan-footer">
-            ${priceHtml}
-            <button class="btn btn-primary view-plan-trigger" style="padding: 0.6rem 1.1rem; font-size: 0.85rem;">View Plan</button>
-          </div>
-        `;
-        plansContainer.appendChild(card);
+            <h3 class="plan-name">${plan.name}</h3>
+            <div class="plan-tags">
+              <span class="plan-tag">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                ${plan.duration}
+              </span>
+              <span class="plan-tag" style="color: #60A5FA;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                ${plan.category_label || 'Coaching'}
+              </span>
+            </div>
+            <p class="plan-desc">${plan.description}</p>
+            <div class="plan-footer">
+              <div class="plan-pricing">
+                <span class="pricing-amount" style="font-size: 1.35rem; font-weight: 700; color: #FFFFFF;">${plan.price}</span>
+              </div>
+              <button class="btn btn-primary view-plan-trigger" style="padding: 0.6rem 1.1rem; font-size: 0.85rem;">View Plan</button>
+            </div>
+          `;
+          container.appendChild(card);
+        });
       });
 
       // Re-apply active category filter for newly populated cards
@@ -155,11 +157,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!cat) return 'all';
     const c = String(cat).toLowerCase().trim();
     if (c === 'all') return 'all';
-    if (c === 'monthly' || (c.includes('month') && !c.includes('3') && !c.includes('6') && !c.includes('12')) || c === '1 month') return 'monthly';
-    if (c === '3months' || c.includes('3') || c.includes('quarter')) return '3months';
-    if (c === '6months' || c.includes('6')) return '6months';
-    if (c === 'yearly' || c.includes('year') || c.includes('12')) return 'yearly';
-    if (c === 'smart' || c.includes('smart') || c.includes('diet')) return 'smart';
+    if (c === 'personal' || c === '1on1' || c.includes('private') || c.includes('personal')) return 'personal';
+    if (c === 'group' || c.includes('group')) return 'group';
+    if (c === 'custom-plan' || c === 'custom' || c === 'smart' || c === 'diet' || c.includes('plan')) return 'custom-plan';
+    if (c === 'online') return 'online';
+    if (c === 'offline') return 'offline';
     return c;
   }
 
@@ -173,65 +175,68 @@ document.addEventListener('DOMContentLoaded', async () => {
     const cardSlug = (card.getAttribute('data-slug') || '').toLowerCase().trim();
     const cardName = (card.getAttribute('data-name') || '').toLowerCase().trim();
     const cardLabel = (card.getAttribute('data-category-label') || '').toLowerCase().trim();
-    const cardDuration = (card.getAttribute('data-duration') || '').toLowerCase().trim();
 
-    if (selectedCategory === 'monthly') {
+    if (selectedCategory === 'personal' || selectedCategory === '1on1') {
       return (
-        cardCat === 'monthly' ||
-        cardSlug.includes('monthly') ||
-        cardName.includes('monthly') ||
-        (cardDuration.includes('1 month') && !cardDuration.includes('12')) ||
-        (cardLabel.includes('1 month') && !cardLabel.includes('12'))
+        cardCat.includes('personal') ||
+        cardSlug.includes('1x1') ||
+        cardSlug.includes('personal') ||
+        cardName.includes('1x1') ||
+        cardLabel.includes('1x1') ||
+        cardLabel.includes('private') ||
+        (!cardName.includes('group') && (cardSlug.includes('online-training') || cardSlug.includes('offline-training')))
       );
     }
 
-    if (selectedCategory === '3months') {
+    if (selectedCategory === 'group') {
       return (
-        cardCat === '3months' ||
-        cardCat === '3-months' ||
-        cardSlug.includes('3') ||
-        cardName.includes('3 month') ||
-        cardDuration.includes('3 month') ||
-        cardLabel.includes('3 month')
+        cardCat.includes('group') ||
+        cardSlug.includes('group') ||
+        cardName.includes('group') ||
+        cardLabel.includes('group')
       );
     }
 
-    if (selectedCategory === '6months') {
+    if (selectedCategory === 'custom-plan' || selectedCategory === 'custom' || selectedCategory === 'smart' || selectedCategory === 'diet') {
       return (
-        cardCat === '6months' ||
-        cardCat === '6-months' ||
-        cardSlug.includes('6') ||
-        cardName.includes('6 month') ||
-        cardDuration.includes('6 month') ||
-        cardLabel.includes('6 month')
-      );
-    }
-
-    if (selectedCategory === 'yearly') {
-      return (
-        cardCat === 'yearly' ||
-        cardCat === '12months' ||
-        cardCat === '12-months' ||
-        cardSlug.includes('year') ||
-        cardSlug.includes('12') ||
-        cardName.includes('year') ||
-        cardDuration.includes('12 month') ||
-        cardLabel.includes('12 month')
-      );
-    }
-
-    if (selectedCategory === 'smart') {
-      return (
-        cardCat === 'smart' ||
+        cardCat.includes('custom') ||
+        cardCat.includes('smart') ||
+        cardCat.includes('diet') ||
         cardSlug.includes('smart') ||
+        cardSlug.includes('diet') ||
         cardName.includes('smart') ||
+        cardName.includes('diet') ||
         cardLabel.includes('diet') ||
-        cardLabel.includes('smart') ||
-        cardDuration.includes('self-paced')
+        cardLabel.includes('workout protocol')
       );
     }
 
-    return cardCat === selectedCategory || cardSlug.includes(selectedCategory);
+    if (selectedCategory === 'online') {
+      return (
+        cardCat.includes('online') ||
+        cardSlug.includes('online') ||
+        cardSlug.includes('smart') ||
+        cardSlug.includes('diet') ||
+        cardName.includes('online') ||
+        cardName.includes('smart') ||
+        cardName.includes('diet') ||
+        cardLabel.includes('online') ||
+        cardLabel.includes('video call')
+      );
+    }
+
+    if (selectedCategory === 'offline') {
+      return (
+        cardCat.includes('offline') ||
+        cardSlug.includes('offline') ||
+        cardName.includes('offline') ||
+        cardLabel.includes('offline') ||
+        cardLabel.includes('in-person') ||
+        cardLabel.includes('facility')
+      );
+    }
+
+    return cardCat.includes(selectedCategory) || cardSlug.includes(selectedCategory);
   }
 
   function applyPlansFilter(selectedCategory) {
